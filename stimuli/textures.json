@@ -1,0 +1,74 @@
+[
+  {
+    "suite_id": "texture_circles",
+    "shape": "mixed",
+    "color": "mid",
+    "x": "mid",
+    "y": "mid",
+    "tilePattern": { "shapes": ["circle"], "pattern": "uniform" }
+  },
+  {
+    "suite_id": "texture_squares",
+    "shape": "mixed",
+    "color": "mid",
+    "x": "mid",
+    "y": "mid",
+    "tilePattern": { "shapes": ["square"], "pattern": "uniform" }
+  },
+  {
+    "suite_id": "texture_stars",
+    "shape": "mixed",
+    "color": "mid",
+    "x": "mid",
+    "y": "mid",
+    "tilePattern": { "shapes": ["star"], "pattern": "uniform" }
+  },
+  {
+    "suite_id": "texture_circles_squares_alternating",
+    "shape": "mixed",
+    "color": "mid",
+    "x": "mid",
+    "y": "mid",
+    "tilePattern": { "shapes": ["circle", "square"], "pattern": "alternating" }
+  },
+  {
+    "suite_id": "texture_circles_stars_alternating",
+    "shape": "mixed",
+    "color": "mid",
+    "x": "mid",
+    "y": "mid",
+    "tilePattern": { "shapes": ["circle", "star"], "pattern": "alternating" }
+  },
+  {
+    "suite_id": "texture_squares_stars_alternating",
+    "shape": "mixed",
+    "color": "mid",
+    "x": "mid",
+    "y": "mid",
+    "tilePattern": { "shapes": ["square", "star"], "pattern": "alternating" }
+  },
+  {
+    "suite_id": "texture_all_shapes_alternating",
+    "shape": "mixed",
+    "color": "mid",
+    "x": "mid",
+    "y": "mid",
+    "tilePattern": { "shapes": ["circle", "square", "star"], "pattern": "alternating" }
+  },
+  {
+    "suite_id": "texture_circles_squares_random",
+    "shape": "mixed",
+    "color": "mid",
+    "x": "mid",
+    "y": "mid",
+    "tilePattern": { "shapes": ["circle", "square"], "pattern": "random" }
+  },
+  {
+    "suite_id": "texture_all_shapes_random",
+    "shape": "mixed",
+    "color": "mid",
+    "x": "mid",
+    "y": "mid",
+    "tilePattern": { "shapes": ["circle", "square", "star"], "pattern": "random" }
+  }
+]

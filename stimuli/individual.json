@@ -1,0 +1,30 @@
+[
+  {
+    "suite_id": "circles_mixed_x",
+    "shape": "low",
+    "color": "mixed",
+    "x": "low",
+    "y": "mid"
+  },
+  {
+    "suite_id": "squares_mixed_x",
+    "shape": "mid",
+    "color": "mid",
+    "x": "mixed",
+    "y": "mid"
+  },
+  {
+    "suite_id": "stars_red_varied",
+    "shape": "high",
+    "color": "mid",
+    "x": "mid",
+    "y": "mixed"
+  },
+  {
+    "suite_id": "squares_mixed_color",
+    "shape": "mid",
+    "color": "mixed",
+    "x": "high",
+    "y": "mid"
+  }
+]

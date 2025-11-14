@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>music comm study v0</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="canvas-section">
+            <h2>CUE</h2>
+            <canvas id="cueCanvas" width="400" height="300"></canvas>
+        </div>
+        <div class="canvas-section">
+            <h2>INSTRUMENT</h2>
+            <div class="y-axis-label">Quality</div>
+            <div class="y-ticks">
+                <span>0</span>
+                <span>1</span>
+                <span>2</span>
+                <span>3</span>
+                <span>4</span>
+                <span>5</span>
+            </div>
+            <canvas id="instrumentCanvas" width="400" height="400"></canvas>
+            <div class="moving-x-tick"></div>
+            <div class="moving-y-tick"></div>
+            <div class="x-ticks">
+                <span>0</span>
+                <span>1</span>
+                <span>2</span>
+                <span>3</span>
+                <span>4</span>
+                <span>5</span>
+            </div>
+            <div class="x-axis-label">Pitch</div>
+        </div>
+    </div>
+    <div class="controls">
+        <label><input type="checkbox" id="legatoCheckbox"> legato</label>
+    </div>
+    <script src="synth.js"></script>
+    <script src="cues.js"></script>
+</body>
+</html>

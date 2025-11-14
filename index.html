@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>instrument zoo</title>
+    <script src="jspsych/jspsych.js"></script>
+    <script src="jspsych/plugin-img-synth-response-2D.js"></script>
+    <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body></body>
+<script>
+    const jsPsych = initJsPsych({
+        on_finish: function() {
+            jsPsych.data.displayData();
+        }
+    });
+
+    // Helper: generate N cue trials for a given stimulus suite
+    function generateCueTrials({stimulus_json, stimulus_index, synth_type='legato', prompt, end_trial_key, cueCount = 3}) {
+        const trials = [];
+        for (let i = 0; i < cueCount; i++) {
+            trials.push({
+                type: jsPsychImgSynthResponse2D,
+                stimulus_json: stimulus_json,
+                stimulus_index: stimulus_index,
+                cue_highlight_index: i,
+                synth_type: synth_type,
+                prompt: prompt,
+                end_trial_key: end_trial_key
+            });
+        }
+        return trials;
+    }
+
+    const suite0 = generateCueTrials({
+        stimulus_json: 'stimuli/individual.json',
+        stimulus_index: 0,
+        synth_type: 'discrete',
+        prompt: '<p>Use the instrument to make a sound that represents the <strong>highlighted cue</strong> (red border).</p>',
+        end_trial_key: 'Enter'
+    });
+
+    const suite1 = generateCueTrials({
+        stimulus_json: 'stimuli/individual.json',
+        stimulus_index: 2,
+        prompt: '<p>Use the instrument to make a sound that represents the <strong>highlighted cue</strong> (red border).</p>',
+        end_trial_key: 'Enter'
+    });
+
+    jsPsych.run([...suite0, ...suite1]);
+</script>
+
+</html>

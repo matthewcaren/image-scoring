@@ -1,0 +1,226 @@
+/* COLOR DEFS */
+:root {
+    --color-dark: #233142;
+    --color-dark2: #455d7a;
+    --color-bright: #f95959;
+    --color-light: #e3e3e3;
+}
+
+
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: white;
+    font-family: Arial, sans-serif;
+    color: var(--color-dark)
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    gap: 160px;
+    align-items: flex-start;
+}
+
+.canvas-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.canvas-section h2 {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: 400;
+    color: var(--color-bright)
+}
+
+#cueCanvas {
+    cursor: default;
+    border: 1px solid var(--color-dark2);
+}
+
+#instrumentCanvas {
+    cursor: pointer;
+    background-color: var(--color-light);
+}
+
+
+.canvas-section {
+    position: relative;
+}
+
+/* Axes styling has been removed, keeping only tick marks */
+
+/* Y-axis ticks and labels */
+.y-ticks {
+    position: absolute;
+    left: -25px;
+    top: 40px; /* Account for header height + controls */
+    height: 400px;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-between;
+    color: var(--color-bright);
+    font-size: 12px;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    pointer-events: none;
+}
+
+.y-ticks span {
+    position: relative;
+    padding-right: 15px;
+    height: 0;
+    line-height: 0;
+    transform: translateY(-1px); /* Fine-tune alignment */
+}
+
+.y-ticks span::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 6px;
+    height: 1px;
+    background-color: var(--color-bright);
+    transform: translateY(-50%);
+}
+
+/* X-axis ticks and labels */
+.x-ticks {
+    position: absolute;
+    left: 0;
+    bottom: -20px;
+    width: 400px;
+    display: flex;
+    justify-content: space-between;
+    color: var(--color-bright);
+    font-size: 12px;
+    pointer-events: none;
+}
+
+.x-ticks span {
+    position: relative;
+    padding-top: 5px;
+}
+
+.x-ticks span::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 1px;
+    height: 6px;
+    background-color: var(--color-bright);
+}
+
+/* Axis labels */
+.x-axis-label,
+.y-axis-label {
+    position: absolute;
+    color: var(--color-bright);
+    font-size: 14px;
+    pointer-events: none;
+}
+
+.x-axis-label {
+    bottom: -45px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.y-axis-label {
+    left: -65px;
+    top: 50%;
+    transform: translateY(100%) rotate(-90deg);
+    white-space: nowrap;
+}
+
+/* Moving tick marks */
+.moving-x-tick,
+.moving-y-tick {
+    position: absolute;
+    background-color: var(--color-bright);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+}
+
+.moving-x-tick {
+    width: 4px;
+    height: 12px;
+    bottom: -12px;
+    transform: translateX(-50%);
+}
+
+.moving-y-tick {
+    width: 12px;
+    height: 4px;
+    left: -12px;
+    transform: translateY(-40px);
+}
+
+#instrumentCanvas {
+    cursor: pointer;
+}
+
+#newCueButton {
+    padding: 10px 20px;
+    margin: 0px 12px;
+    font-size: 16px;
+    background-color: var(--color-dark2);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#newCueButton:hover {
+    background-color: var(--color-dark);
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.controls label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+}
+
+.controls input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--color-dark2);
+}
+
+#cueTypeSelect {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid var(--color-dark2);
+    border-radius: 4px;
+    color: var(--color-dark);
+    background-color: white;
+    cursor: pointer;
+}
+
+#cueTypeSelect:hover {
+    border-color: var(--color-dark);
+}
+
+#cueTypeSelect:focus {
+    outline: none;
+    border-color: var(--color-bright);
+}
