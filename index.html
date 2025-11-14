@@ -2,9 +2,9 @@
 <html>
 
 <head>
-    <title>instrument zoo</title>
+    <title>amoeba scoring</title>
     <script src="jspsych/jspsych.js"></script>
-    <script src="jspsych/plugin-img-synth-response-2D.js"></script>
+    <script src="jspsych/plugin-img-synth-response-anim.js"></script>
     <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -16,39 +16,49 @@
         }
     });
 
-    // Helper: generate N cue trials for a given stimulus suite
-    function generateCueTrials({stimulus_json, stimulus_index, synth_type='legato', prompt, end_trial_key, cueCount = 3}) {
-        const trials = [];
-        for (let i = 0; i < cueCount; i++) {
-            trials.push({
-                type: jsPsychImgSynthResponse2D,
-                stimulus_json: stimulus_json,
-                stimulus_index: stimulus_index,
-                cue_highlight_index: i,
-                synth_type: synth_type,
-                prompt: prompt,
-                end_trial_key: end_trial_key
-            });
-        }
-        return trials;
+    const practice = {
+        type: jsPsychImgSynthResponseAnim,
+        prompt: '<p>Practice with the instrument! Click and drag to play notes.</p>',
+        instrument_only: true,
+        synth_type: 'legato'
     }
 
-    const suite0 = generateCueTrials({
-        stimulus_json: 'stimuli/individual.json',
+    const trial1 = {
+        type: jsPsychImgSynthResponseAnim,
+        stimulus_json: 'stimuli/anim.json',
         stimulus_index: 0,
-        synth_type: 'discrete',
-        prompt: '<p>Use the instrument to make a sound that represents the <strong>highlighted cue</strong> (red border).</p>',
-        end_trial_key: 'Enter'
-    });
+        synth_type: 'legato',
+        prompt: '<p>Watch the animation and create a sound that matches it.</p><p>You\'ll get to play along with the animation.</p>',
+        animation_canvas_size: 400,
+        instrument_canvas_size: 400,
+        animation_duration: 3000,
+        countdown_duration: 3000
+    }
 
-    const suite1 = generateCueTrials({
-        stimulus_json: 'stimuli/individual.json',
+    const trial2 = {
+        type: jsPsychImgSynthResponseAnim,
+        stimulus_json: 'stimuli/anim.json',
+        stimulus_index: 1,
+        synth_type: 'legato',
+        prompt: '<p>Watch the animation and create a sound that matches it.</p><p>You\'ll get to play along with the animation.</p>',
+        animation_canvas_size: 400,
+        instrument_canvas_size: 400,
+        animation_duration: 3000,
+        countdown_duration: 3000
+    }
+    const trial3 = {
+        type: jsPsychImgSynthResponseAnim,
+        stimulus_json: 'stimuli/anim.json',
         stimulus_index: 2,
-        prompt: '<p>Use the instrument to make a sound that represents the <strong>highlighted cue</strong> (red border).</p>',
-        end_trial_key: 'Enter'
-    });
+        synth_type: 'legato',
+        prompt: '<p>Watch the animation and create a sound that matches it.</p><p>You\'ll get to play along with the animation.</p>',
+        animation_canvas_size: 400,
+        instrument_canvas_size: 400,
+        animation_duration: 3000,
+        countdown_duration: 3000
+    }
 
-    jsPsych.run([...suite0, ...suite1]);
+    jsPsych.run([practice, trial1, trial2, trial3]);
 </script>
 
 </html>
