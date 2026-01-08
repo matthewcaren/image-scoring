@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Make some sounds!</title>
+
+    <!-- load stylesheets first -->
+    <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!-- load all scripts at end of body for better performance -->
+<!-- load client-side js libraries. socket io must match versions with that used in app.js!-->
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+<script src="jspsych/jspsych.js"></script>
+<script src="jspsych/plugin-html-button-response.js"></script>
+<script src="jspsych/plugin-animation-grid-preview.js"></script>
+<script src="jspsych/plugin-animation-matching.js"></script>
+<script src="jspsych/plugin-img-synth-response-anim.js"></script>
+<script src="image-scoring-study.js"></script>
+
+<script>
+    runStudy(
+        stimulusFile = "stimuli/generated_stimuli/batch1_suite1.json",
+        condition = "musical"
+    );
+</script>
+
+<!-- load experiment-specific helper functions -->
+<!-- <script type="module">
+    window.addEventListener("load", async () => {
+        try {
+            // prevent right-clicking unless debugMode is explicitly true
+            if (!config.devMode) {
+                document.addEventListener('contextmenu', event => event.preventDefault());
+            }
+
+            const { setupExperiment } = await import('./js/setup.js');
+            setupExperiment(config);
+
+        } catch (error) {
+            console.error("Failed to load experiment:", error);
+            document.body.innerHTML = '<p>Error loading experiment. Please check the console for details.</p>';
+        }
+    });
+</script> -->
+</body>
+</html>

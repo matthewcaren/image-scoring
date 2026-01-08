@@ -1,0 +1,7 @@
+Write #file:stimuli_generator.py , which creates a suite of JSON stimuli data. Each JSON file should be a suite of 9 stimulus animations, where each animation has only 1 attribute (irregularity, aspect ratio, or color) change. Refer to #file:anim.json for an example of the JSON format, which stores the start state and end state of each simple animation. Each attribute is allowed to take on one of three values. Irregularity: {0, 0.5, 1}, Aspect: {0.2, 0.5, 1}, Color: {"red", "green", "blue"}.
+
+In each suite, there is a default value for each of the attributes. Only the attribute which is being animated/changed may diverge from the default value.
+
+The suites are organized into batches of 3 suites each. Make sure the filenames of the JSONs reflect this batching. In a batch, the default values of each attribute should be different for each of the 3 suites.
+
+Additionally, make sure that all 30 possible animations for each attribute are covered across *all* generated suites.
