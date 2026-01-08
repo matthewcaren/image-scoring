@@ -16,7 +16,7 @@ var
   sendPostRequest = require('request').post,
   cors = require('cors'),
   portastic = require('portastic'),
-  { Server } = require("socket.io");
+  socketio = require("socket.io");
 
 // Add body-parser with increased payload size limit
 app.use(require('body-parser').json({limit: '25mb'}));
@@ -82,22 +82,13 @@ try {
     intermed = fs.readFileSync('/etc/letsencrypt/live/cogtoolslab.org/chain.pem'),
     options = { key: privateKey, cert: certificate, ca: intermed };
   const httpsServer = https.createServer(options, app);
-  io = new Server(httpsServer, {
-    cors: {
-      origin: "*",
-      methods: ["GET", "POST"]
-    }
-  });
+  io = socketio(httpsServer);
   httpsServer.listen(gameport);
 } catch (err) {
+  console.log("error setting up SSL certs:", err);
   console.log("cannot find SSL certificates; falling back to http");
   const httpServer = require('http').createServer(app);
-  io = new Server(httpServer, {
-    cors: {
-      origin: "*",
-      methods: ["GET", "POST"]
-    }
-  });
+  io = socketio(httpServer);
   httpServer.listen(gameport);
 }
 
