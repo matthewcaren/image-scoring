@@ -42,7 +42,7 @@ function runStudy(stimulusFile, condition) {
     }
 
     const jsPsych = initJsPsych({
-        on_finish: function() {
+        on_finish: function(data) {
             console.log("Experiment complete. Preparing to send data...");
             console.log(data);
             gs.session_info.send_data(data);
