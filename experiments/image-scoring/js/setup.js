@@ -30,6 +30,7 @@ function setupGame() {
 
         // SEND DATA TO MONGO
         gs.session_info.send_data = function (data) {
+            console.log("sending data to server...");
             json = _.extend({},
                 { study_metadata: gs.study_metadata },
                 { session_info: _.omit(gs.session_info, 'on_finish', 'stimuli') },
@@ -39,6 +40,7 @@ function setupGame() {
                 gs.study_metadata.project, //dbname
                 gs.study_metadata.experiment, //colname
                 gs.session_info.gameID);
+            console.log("data sent.");
         }
 
 
