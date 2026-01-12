@@ -105,6 +105,8 @@ function serve() {
     app.use(bodyParser.urlencoded({limit: '25mb', extended: true}));
 
     app.post('/db/insert', (request, response) => {
+      console.log("begin insert request processing");
+
       if (!request.body) {
         return failure(response, '/db/insert needs post request body');
       }
