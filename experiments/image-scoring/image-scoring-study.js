@@ -41,6 +41,20 @@ function runStudy(stimulusFile, condition) {
         throw new Error(`Invalid condition: ${condition}. Must be either "referential" or "musical".`);
     }
 
+    gs.session_info.send_data = function (data) {
+        console.log("sending data to server...");
+        json = _.extend({},
+            { study_metadata: gs.study_metadata },
+            { session_info: _.omit(gs.session_info, 'on_finish', 'stimuli') },
+            { prolific: gs.prolific_info },
+            data);
+        socket.emit('currentData', json,
+            gs.study_metadata.project, //dbname
+            gs.study_metadata.experiment, //colname
+            gs.session_info.gameID);
+        console.log("data sent.");
+    }
+
     const jsPsych = initJsPsych({
         on_finish: function(data) {
             console.log("Experiment complete. Preparing to send data...");
