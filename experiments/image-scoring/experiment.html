@@ -23,6 +23,7 @@
 <script src="image-scoring-study.js"></script>
 
 <script>
+    let socket = io.connect();
     runStudy(
         stimulusFile = "stimuli/generated_stimuli/batch1_suite1.json",
         condition = "musical"
