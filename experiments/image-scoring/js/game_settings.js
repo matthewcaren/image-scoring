@@ -34,7 +34,7 @@ gs = {
         colorOrderCondition: undefined,
         damageOrderCondition: undefined,
         trials: undefined,
-        send_data: undefined // used to be is_finished
+        send_data: undefined
     },
     prolific_info: {
         prolificPID: undefined,
