@@ -52,6 +52,7 @@ function runStudy(stimulusFile, condition) {
             gs.study_metadata.project, //dbname
             gs.study_metadata.experiment, //colname
             gs.session_info.gameID);
+        console.log(gs.study_metadata.project, gs.study_metadata.experiment, gs.session_info.gameID);
         console.log("data sent.");
     }
 

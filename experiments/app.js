@@ -109,6 +109,7 @@ io.on('connection', function (socket) {
   });
   // write data to db upon getting current data
   socket.on('currentData', function (data) {
+    console.log("currentData message received");
     // Log payload size in KB and MB when receiving data
     const payloadSize = JSON.stringify(data).length;
     const payloadSizeKB = (payloadSize / 1024).toFixed(2);
