@@ -275,14 +275,19 @@ function runStudy(stimulusFile, condition) {
     
     const timeline = [];
 
-    // simple text response trial to test data pipeline
-    timeline.push({
-        type: jsPsychHtmlTextResponse,
-        stimulus: '<p>This is a test trial. Please type something in the box below.</p>',
-        prompt: 'Your response:',
-        rows: 5,
-        columns: 40
-    });
+    // simple JSPsych slider response trial to test data pipeline
+    const sliderTest = {
+        type: jsPsychHtmlSliderResponse,
+        stimulus: '<p>[test] On a scale from 0 to 100, how much do you like ice cream?</p>',
+        labels: ['0', '50', '100'],
+        min: 0,
+        max: 100,
+        start: 50,
+        step: 1,
+        require_movement: true,
+        button_label: 'Submit'
+    };
+    timeline.push(sliderTest);
 
     jsPsych.run(timeline);
 }
