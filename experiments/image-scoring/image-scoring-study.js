@@ -47,229 +47,242 @@ function runStudy(stimulusFile, condition) {
         }
     });
 
-    // Define the stimulus indices for the batch
-    const stimulusIndices = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+    // //#region STUDY TIMELINE
 
-    // Get instruction text based on condition
-    const instructions = studyInstructions[condition];
+    // // Define the stimulus indices for the batch
+    // const stimulusIndices = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
-    // Instruction screens with 3-second delay on continue button
-    const intro1 = {
-        type: jsPsychHtmlButtonResponse,
-        stimulus: instructions.intro1,
-        choices: ['Continue'],
-        on_load: function() {
-            const buttons = document.querySelectorAll('.jspsych-btn');
-            buttons.forEach(btn => btn.disabled = true);
-            setTimeout(function() {
-                buttons.forEach(btn => btn.disabled = false);
-            }, 3000);
-        }
-    };
+    // // Get instruction text based on condition
+    // const instructions = studyInstructions[condition];
 
-    const intro2 = {
-        type: jsPsychImgSynthResponseAnim,
-        prompt: instructions.intro2,
-        tutorial: true,
-        synth_type: 'legato'
-    };
+    // // Instruction screens with 3-second delay on continue button
+    // const intro1 = {
+    //     type: jsPsychHtmlButtonResponse,
+    //     stimulus: instructions.intro1,
+    //     choices: ['Continue'],
+    //     on_load: function() {
+    //         const buttons = document.querySelectorAll('.jspsych-btn');
+    //         buttons.forEach(btn => btn.disabled = true);
+    //         setTimeout(function() {
+    //             buttons.forEach(btn => btn.disabled = false);
+    //         }, 3000);
+    //     }
+    // };
 
-    const intro3 = {
-        type: jsPsychImgSynthResponseAnim,
-        prompt: instructions.intro3,
-        tutorial: true,
-        tutorial_arrows: [
-            { startX: 0.1, startY: 0.8, endX: 0.9, endY: 0.8 }
-        ],
-        synth_type: 'legato'
-    };
+    // const intro2 = {
+    //     type: jsPsychImgSynthResponseAnim,
+    //     prompt: instructions.intro2,
+    //     tutorial: true,
+    //     synth_type: 'legato'
+    // };
 
-    const intro4 = {
-        type: jsPsychImgSynthResponseAnim,
-        prompt: instructions.intro4,
-        tutorial: true,
-        tutorial_arrows: [
-            { startX: 0.3, startY: 0.95, endX: 0.3, endY: 0.05 }
-        ],
-        synth_type: 'legato'
-    };
+    // const intro3 = {
+    //     type: jsPsychImgSynthResponseAnim,
+    //     prompt: instructions.intro3,
+    //     tutorial: true,
+    //     tutorial_arrows: [
+    //         { startX: 0.1, startY: 0.8, endX: 0.9, endY: 0.8 }
+    //     ],
+    //     synth_type: 'legato'
+    // };
 
-    const intro5 = {
-        type: jsPsychImgSynthResponseAnim,
-        prompt: instructions.intro5,
-        tutorial: true,
-        tutorial_arrows: [
-            { startX: 0.96, startY: 0.04, endX: 0.04, endY: 0.96 },
-            { startX: 0.7, startY: 0.6, endX: 0.96, endY: 0.8 }
-        ],
-        synth_type: 'legato'
-    };
+    // const intro4 = {
+    //     type: jsPsychImgSynthResponseAnim,
+    //     prompt: instructions.intro4,
+    //     tutorial: true,
+    //     tutorial_arrows: [
+    //         { startX: 0.3, startY: 0.95, endX: 0.3, endY: 0.05 }
+    //     ],
+    //     synth_type: 'legato'
+    // };
 
-    const intro6 = {
-        type: jsPsychHtmlButtonResponse,
-        stimulus: instructions.intro6,
-        choices: ['Continue'],
-        on_load: function() {
-            const buttons = document.querySelectorAll('.jspsych-btn');
-            buttons.forEach(btn => btn.disabled = true);
-            setTimeout(function() {
-                buttons.forEach(btn => btn.disabled = false);
-            }, 3000);
-        }
-    };
+    // const intro5 = {
+    //     type: jsPsychImgSynthResponseAnim,
+    //     prompt: instructions.intro5,
+    //     tutorial: true,
+    //     tutorial_arrows: [
+    //         { startX: 0.96, startY: 0.04, endX: 0.04, endY: 0.96 },
+    //         { startX: 0.7, startY: 0.6, endX: 0.96, endY: 0.8 }
+    //     ],
+    //     synth_type: 'legato'
+    // };
 
-    // Build timeline with new instruction flow
+    // const intro6 = {
+    //     type: jsPsychHtmlButtonResponse,
+    //     stimulus: instructions.intro6,
+    //     choices: ['Continue'],
+    //     on_load: function() {
+    //         const buttons = document.querySelectorAll('.jspsych-btn');
+    //         buttons.forEach(btn => btn.disabled = true);
+    //         setTimeout(function() {
+    //             buttons.forEach(btn => btn.disabled = false);
+    //         }, 3000);
+    //     }
+    // };
+
+    // // Instantiate timeline with instruction flow
     // const timeline = [intro1, intro2, intro3, intro4, intro5, intro6];
+
+    // // Add full batch preview
+    // timeline.push({
+    //     type: jsPsychAnimationGridPreview,
+    //     stimulus_json: stimulusFile,
+    //     highlight_index: null,
+    //     title: instructions.gridTitle,
+    //     prompt: instructions.gridPrompt,
+    //     button_label: 'Continue',
+    //     cell_size: 150,
+    //     animation_duration: 3000,
+    //     on_load: function () {
+    //         const buttons = document.querySelectorAll('.jspsych-btn');
+    //         buttons.forEach(btn => btn.disabled = true);
+    //         setTimeout(function () {
+    //             buttons.forEach(btn => btn.disabled = false);
+    //         }, 3000);
+    //     }
+    // });
+
+    // // Final instruction screen
+    // const intro7 = {
+    //     type: jsPsychHtmlButtonResponse,
+    //     stimulus: instructions.intro7,
+    //     choices: ['Continue'],
+    //     on_load: function() {
+    //         const buttons = document.querySelectorAll('.jspsych-btn');
+    //         buttons.forEach(btn => btn.disabled = true);
+    //         setTimeout(function() {
+    //             buttons.forEach(btn => btn.disabled = false);
+    //         }, 3000);
+    //     }
+    // };
+    
+    // timeline.push(intro7);
+
+    // // For each stimulus, add: highlighted preview -> scoring trial
+    // stimulusIndices.forEach((index, i) => {
+    //     // Preview screen showing which animation is next
+    //     timeline.push({
+    //         type: jsPsychAnimationGridPreview,
+    //         stimulus_json: stimulusFile,
+    //         highlight_index: index,
+    //         title: `Clip ${i + 1} of ${stimulusIndices.length}`,
+    //         prompt: instructions.previewPrompt,
+    //         button_label: 'Continue',
+    //         cell_size: 150,
+    //         animation_duration: 3000
+    //     });
+
+    //     // Scoring trial
+    //     timeline.push({
+    //         type: jsPsychImgSynthResponseAnim,
+    //         stimulus_json: stimulusFile,
+    //         stimulus_index: index,
+    //         synth_type: 'legato',
+    //         prompt: instructions.trialPrompt,
+    //         review_prompt: instructions.reviewPrompt,
+    //         animation_canvas_size: 400,
+    //         instrument_canvas_size: 400,
+    //         animation_duration: 3000,
+    //         countdown_duration: 3000
+    //     });
+    // });
+
+    // // Add final gallery section where participants select their favorites
+    // timeline.push({
+    //     type: jsPsychAnimationGridPreview,
+    //     stimulus_json: stimulusFile,
+    //     highlight_index: null,
+    //     title: 'Review Your Sounds',
+    //     prompt: condition === 'referential' 
+    //         ? '<p>Click on each clip to play it with your sound. Select your 2 favorites that best match their clips!</p>'
+    //         : '<p>Click on each clip to play it with your sound. Select your 2 favorites!</p>',
+    //     button_label: 'Submit',
+    //     cell_size: 150,
+    //     animation_duration: 3000,
+    //     interactive_mode: true,
+    //     max_favorites: 2,
+    //     audio_recordings: function() {
+    //         // Collect audio URLs from all completed trials
+    //         const allData = jsPsych.data.get();
+    //         const synthTrials = allData.filter({trial_type: 'img-synth-response-anim'});
+            
+    //         // Create an array indexed by stimulus_index
+    //         const audioRecordings = new Array(stimulusIndices.length);
+            
+    //         synthTrials.values().forEach(trial => {
+    //             if (trial.audio_url && trial.stimulus_index !== undefined) {
+    //                 // Map the stimulus_index to the position in our array
+    //                 const arrayIndex = stimulusIndices.indexOf(trial.stimulus_index);
+    //                 if (arrayIndex !== -1) {
+    //                     audioRecordings[arrayIndex] = trial.audio_url;
+    //                 }
+    //             }
+    //         });
+            
+    //         return audioRecordings;
+    //     }
+    // });
+
+    // // Add matching instruction
+    // timeline.push({
+    //     type: jsPsychHtmlButtonResponse,
+    //     stimulus: instructions.matchingIntro,
+    //     choices: ['Continue'],
+    //     on_load: function() {
+    //         const buttons = document.querySelectorAll('.jspsych-btn');
+    //         buttons.forEach(btn => btn.disabled = true);
+    //         setTimeout(function() {
+    //             buttons.forEach(btn => btn.disabled = false);
+    //         }, 3000);
+    //     }
+    // });
+
+    // // Select 4 random stimuli for matching trials
+    // const shuffled = [...stimulusIndices].sort(() => Math.random() - 0.5);
+    // const matchingStimuli = shuffled.slice(0, 4);
+
+    // // Add 4 matching trials
+    // matchingStimuli.forEach((correctIndex, trialNum) => {
+    //     // Generate 3 incorrect choices (different from correct)
+    //     const incorrectChoices = stimulusIndices
+    //         .filter(idx => idx !== correctIndex)
+    //         .sort(() => Math.random() - 0.5)
+    //         .slice(0, 3);
+        
+    //     // Combine and shuffle all 4 choices
+    //     const allChoices = [correctIndex, ...incorrectChoices].sort(() => Math.random() - 0.5);
+        
+    //     timeline.push({
+    //         type: jsPsychAnimationMatching,
+    //         stimulus_json: stimulusFile,
+    //         correct_index: correctIndex,
+    //         choice_indices: allChoices,
+    //         title: `Matching ${trialNum + 1} of 4`,
+    //         prompt: instructions.matchingPrompt,
+    //         button_label: 'Continue',
+    //         cell_size: 150,
+    //         animation_duration: 3000,
+    //         audio_url: function() {
+    //             const allData = jsPsych.data.get();
+    //             const synthTrials = allData.filter({trial_type: 'img-synth-response-anim'});
+    //             const trial = synthTrials.values().find(t => t.stimulus_index === correctIndex);
+    //             return trial ? trial.audio_url : null;
+    //         }
+    //     });
+    // });
+
+    // //#endregion
+    
     const timeline = [];
 
-    // Add full batch preview
+    // simple text response trial to test data pipeline
     timeline.push({
-        type: jsPsychAnimationGridPreview,
-        stimulus_json: stimulusFile,
-        highlight_index: null,
-        title: instructions.gridTitle,
-        prompt: instructions.gridPrompt,
-        button_label: 'Continue',
-        cell_size: 150,
-        animation_duration: 3000,
-        on_load: function () {
-            const buttons = document.querySelectorAll('.jspsych-btn');
-            buttons.forEach(btn => btn.disabled = true);
-            setTimeout(function () {
-                buttons.forEach(btn => btn.disabled = false);
-            }, 3000);
-        }
+        type: jsPsychHtmlTextResponse,
+        stimulus: '<p>This is a test trial. Please type something in the box below.</p>',
+        prompt: 'Your response:',
+        rows: 5,
+        columns: 40
     });
 
-    // Final instruction screen
-    const intro7 = {
-        type: jsPsychHtmlButtonResponse,
-        stimulus: instructions.intro7,
-        choices: ['Continue'],
-        on_load: function() {
-            const buttons = document.querySelectorAll('.jspsych-btn');
-            buttons.forEach(btn => btn.disabled = true);
-            setTimeout(function() {
-                buttons.forEach(btn => btn.disabled = false);
-            }, 3000);
-        }
-    };
-    
-    timeline.push(intro7);
-
-    // For each stimulus, add: highlighted preview -> scoring trial
-    stimulusIndices.forEach((index, i) => {
-        // Preview screen showing which animation is next
-        timeline.push({
-            type: jsPsychAnimationGridPreview,
-            stimulus_json: stimulusFile,
-            highlight_index: index,
-            title: `Clip ${i + 1} of ${stimulusIndices.length}`,
-            prompt: instructions.previewPrompt,
-            button_label: 'Continue',
-            cell_size: 150,
-            animation_duration: 3000
-        });
-
-        // Scoring trial
-        timeline.push({
-            type: jsPsychImgSynthResponseAnim,
-            stimulus_json: stimulusFile,
-            stimulus_index: index,
-            synth_type: 'legato',
-            prompt: instructions.trialPrompt,
-            review_prompt: instructions.reviewPrompt,
-            animation_canvas_size: 400,
-            instrument_canvas_size: 400,
-            animation_duration: 3000,
-            countdown_duration: 3000
-        });
-    });
-
-    // Add final gallery section where participants select their favorites
-    timeline.push({
-        type: jsPsychAnimationGridPreview,
-        stimulus_json: stimulusFile,
-        highlight_index: null,
-        title: 'Review Your Sounds',
-        prompt: condition === 'referential' 
-            ? '<p>Click on each clip to play it with your sound. Select your 2 favorites that best match their clips!</p>'
-            : '<p>Click on each clip to play it with your sound. Select your 2 favorites!</p>',
-        button_label: 'Submit',
-        cell_size: 150,
-        animation_duration: 3000,
-        interactive_mode: true,
-        max_favorites: 2,
-        audio_recordings: function() {
-            // Collect audio URLs from all completed trials
-            const allData = jsPsych.data.get();
-            const synthTrials = allData.filter({trial_type: 'img-synth-response-anim'});
-            
-            // Create an array indexed by stimulus_index
-            const audioRecordings = new Array(stimulusIndices.length);
-            
-            synthTrials.values().forEach(trial => {
-                if (trial.audio_url && trial.stimulus_index !== undefined) {
-                    // Map the stimulus_index to the position in our array
-                    const arrayIndex = stimulusIndices.indexOf(trial.stimulus_index);
-                    if (arrayIndex !== -1) {
-                        audioRecordings[arrayIndex] = trial.audio_url;
-                    }
-                }
-            });
-            
-            return audioRecordings;
-        }
-    });
-
-    // Add matching instruction
-    timeline.push({
-        type: jsPsychHtmlButtonResponse,
-        stimulus: instructions.matchingIntro,
-        choices: ['Continue'],
-        on_load: function() {
-            const buttons = document.querySelectorAll('.jspsych-btn');
-            buttons.forEach(btn => btn.disabled = true);
-            setTimeout(function() {
-                buttons.forEach(btn => btn.disabled = false);
-            }, 3000);
-        }
-    });
-
-    // Select 4 random stimuli for matching trials
-    const shuffled = [...stimulusIndices].sort(() => Math.random() - 0.5);
-    const matchingStimuli = shuffled.slice(0, 4);
-
-    // Add 4 matching trials
-    matchingStimuli.forEach((correctIndex, trialNum) => {
-        // Generate 3 incorrect choices (different from correct)
-        const incorrectChoices = stimulusIndices
-            .filter(idx => idx !== correctIndex)
-            .sort(() => Math.random() - 0.5)
-            .slice(0, 3);
-        
-        // Combine and shuffle all 4 choices
-        const allChoices = [correctIndex, ...incorrectChoices].sort(() => Math.random() - 0.5);
-        
-        timeline.push({
-            type: jsPsychAnimationMatching,
-            stimulus_json: stimulusFile,
-            correct_index: correctIndex,
-            choice_indices: allChoices,
-            title: `Matching ${trialNum + 1} of 4`,
-            prompt: instructions.matchingPrompt,
-            button_label: 'Continue',
-            cell_size: 150,
-            animation_duration: 3000,
-            audio_url: function() {
-                const allData = jsPsych.data.get();
-                const synthTrials = allData.filter({trial_type: 'img-synth-response-anim'});
-                const trial = synthTrials.values().find(t => t.stimulus_index === correctIndex);
-                return trial ? trial.audio_url : null;
-            }
-        });
-    });
-
-    
     jsPsych.run(timeline);
 }
