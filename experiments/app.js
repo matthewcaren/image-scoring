@@ -100,6 +100,10 @@ app.get('/*', (req, res) => {
 io.on('connection', function (socket) {
   console.log('\t :: Express :: client connected');
 
+  socket.on('helloEvent', function (data) {
+    console.log("helloEvent received " + data);
+  });
+
   // on request serve the stimulus data
   socket.on('getStims', function (data) {
     var proj_name = data.proj_name;  // effectively dbname
