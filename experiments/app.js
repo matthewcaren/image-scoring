@@ -195,6 +195,7 @@ var UUID = function () {
 };
 
 var writeDataToMongo = function (data, proj_name, collection, it_name) {
+  console.log("writeDataToMongo called");
   var db = proj_name + '_output';
   const gameID = data.gameID || '';
   sendPostRequest(
