@@ -111,10 +111,10 @@ function serve() {
         return failure(response, '/db/insert needs post request body');
       }
       console.log('request body:',request.body);
-      console.log(`got request to insert into ${request.body.dbname}, ${request.body.collname}`);
+      console.log(`got request to insert into ${request.body.study_metadata.project}, ${request.body.study_metadata.experiment}`);
 
-      var databaseName = request.body.dbname;
-      var collectionName = request.body.collname;
+      var databaseName = request.body.study_metadata.project;
+      var collectionName = request.body.study_metadata.experiment;
       if (!collectionName) {
         return failure(response, '/db/insert needs collection');
       }
@@ -136,7 +136,7 @@ function serve() {
 
       const collection = database.collection(collectionName);
 
-      const data = _.omit(request.body, ['collname', 'dbname']);
+      const data = _.omit(request.body, ['project', 'experiment']);
       collection.insert(data, (err, result) => {
         if (err) {
           return failure(response, `error inserting data: ${err}`);
@@ -145,96 +145,6 @@ function serve() {
         }
       });
     });
-
-    app.post('/db/getstims', (request, response) => {
-      if (!request.body) {
-        return failure(response, '/db/getstims needs post request body');
-      }
-      console.log('request:',request.body);
-      console.log(`got request to get stims from ${request.body.dbname}/${request.body.collname}/${request.body.it_name}`);
-
-      const databaseName = request.body.dbname;
-      const collectionName = request.body.collname;
-      const iterName = request.body.it_name;
-      if (!collectionName) {
-        return failure(response, '/db/getstims needs collection');
-      }
-      if (!databaseName) {
-        return failure(response, '/db/getstims needs database');
-      }
-
-      const database = connection.db(databaseName);
-      const collection = database.collection(collectionName);
-
-      // just pull all the trials
-      // copied from
-      // https://github.com/cogtoolslab/photodraw32/blob/master/experiments/instancedraw_photo/store.js#L203
-      //const maxRecords = 500;
-      //let records = collection.find();
-      //if (records.count() > maxRecords) {
-      //  records = records.limit(maxRecords);
-      //}
-      //records.toArray(err, results) => {
-      // sort by number of times previously served up and take the first
-      collection.aggregate([
-        { $match: { iteration: iterName } }, // only serve the iteration we want
-      ]).toArray((err, results) => {
-        if (err) {
-          console.log("Error while aggregating for iternamer", iterName, " error: ", err);
-        } else {
-          // Immediately mark as annotated so others won't get it too
-          try {
-            markAnnotation(collection, request.body.gameid, results[0]['_id']);
-          }
-          catch (err) {
-            console.log("Couldn't mark gameID as served", err);
-          }
-          console.log("Sending", results[0]);
-          // this gets sent to store.js (not client yet)
-          response.send(results[0]);
-        }
-      });
-    });
-
-    app.post('/db/exists', (request, response) => {
-      if (!request.body) {
-        return failure(response, '/db/exists needs post request body');
-      }
-      const databaseName = request.body.dbname;
-      const collectionName = request.body.collname;
-      const database = connection.db(databaseName);
-      const query = request.body.query;
-      const projection = request.body.projection;
-      var collectionList = [collectionName];
-      function checkCollectionForHits(collectionName, query, projection, callback) {
-        const collection = database.collection(collectionName);
-        collection.find(query, projection).limit(1).toArray((err, items) => {
-          callback(!_.isEmpty(items));
-        });
-      }
-      function checkEach(collectionList, checkCollectionForHits, query,
-        projection, evaluateTally) {
-        var doneCounter = 0;
-        var results = 0;
-        collectionList.forEach(function (collectionName) {
-          checkCollectionForHits(collectionName, query, projection, function (res) {
-            log(`got request to find_one in ${collectionName} with` +
-              ` query ${JSON.stringify(query).substring(0,200)} and projection ${JSON.stringify(projection).substring(0,200)}`);
-            doneCounter += 1;
-            results += res;
-            if (doneCounter === collectionList.length) {
-              evaluateTally(results);
-            }
-          });
-        });
-      }
-      function evaluateTally(hits) {
-        console.log("hits: ", hits);
-        response.json(hits > 0);
-      }
-      checkEach(collectionList, checkCollectionForHits, query, projection, evaluateTally);
-    });
-
 
     app.listen(port, () => {
       log(`running at http://localhost:${port}`);
