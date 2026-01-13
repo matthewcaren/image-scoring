@@ -110,6 +110,7 @@ function serve() {
       if (!request.body) {
         return failure(response, '/db/insert needs post request body');
       }
+      console.log('request body:',request.body);
       console.log(`got request to insert into ${request.body.dbname}, ${request.body.collname}`);
 
       var databaseName = request.body.dbname;
