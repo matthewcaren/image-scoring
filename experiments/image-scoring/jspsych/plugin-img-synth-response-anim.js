@@ -502,8 +502,8 @@ var jsPsychImgSynthResponseAnim = (function (jspsych) {
         
         controlsContainer.innerHTML = `
           <button id="play-btn" class="jspsych-btn">Play</button>
-          <button id="retry-btn" class="jspsych-btn">Retry</button>
-          <button id="next-btn" class="jspsych-btn" disabled>Yes</button>
+          <button id="retry-btn" class="jspsych-btn">Try again</button>
+          <button id="next-btn" class="jspsych-btn" disabled>Yes, continue</button>
         `;
         
         document.getElementById('play-btn').addEventListener('click', playRecording);
@@ -537,7 +537,7 @@ var jsPsychImgSynthResponseAnim = (function (jspsych) {
         
         audio.onended = () => {
           recordingState = 'recorded';
-          if (prompt) prompt.innerHTML = '<p>Are you satisfied with your performance?</p>';
+          if (prompt) prompt.innerHTML = '<p>Are you satisfied with your sound?</p>';
           
           if (playBtn) playBtn.disabled = false;
           if (retryBtn) retryBtn.disabled = false;
