@@ -12,7 +12,7 @@ const studyInstructions = {
         previewPrompt: 'This is the clip you\'re about to make a sound for.',
         trialPrompt: '<p>Watch the clip and create a sound that matches it. You\'ll get to play along with the clip.</p>',
         reviewPrompt: '<p>Listen to your sound! Does it match the clip?</p>',
-        matchingIntro: '<div style="padding: 0 100px;"><p>Great! Now, let\'s see how well your sounds match the clips.</p><p>You\'ll hear a sound you created, and we\'ll show you 4 clips. Click on the clip you think the sound was made for.</p></div>',
+        matchingIntro: '<div style="padding: 0 100px;"><p>Great! In this next part, you\'ll match sounds you made to their clips.</p><p>Click on the clip that matches the sound.</p></div>',
         matchingTitle: 'Which clip does this sound go with?',
         matchingPrompt: '<p>Listen to the sound, then click on the clip it was made for.</p>'
     },
@@ -29,7 +29,7 @@ const studyInstructions = {
         previewPrompt: 'This is the clip you\'re about to make a sound for.',
         trialPrompt: '<p>Watch the clip and create a sound for it. You\'ll get to play along with the clip.</p>',
         reviewPrompt: '<p>Listen to your sound! Do you like it?</p>',
-        matchingIntro: '<div style="padding: 0 100px;"><p>Great! Now, let\'s see how well your sounds match the clips.</p><p>You\'ll hear a sound you created, and we\'ll show you 4 clips. Click on the clip you think the sound was made for.</p></div>',
+        matchingIntro: '<div style="padding: 0 100px;"><p>Great! In this next part, you\'ll match sounds you made to their clips.</p><p>Click on the clip that matches the sound.</p></div>',
         matchingTitle: 'Which clip does this sound go with?',
         matchingPrompt: '<p>Listen to the sound, then click on the clip it was made for.</p>'
     }
@@ -268,16 +268,28 @@ function runStudy(stimulusFile) {
         });
     });
 
+    const transitionToReview = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: "Great job! You've made sounds for all the clips. Next, you'll answer a few questions about the sounds you made.",
+        choices: ['Continue'],
+        on_load: function () {
+            const buttons = document.querySelectorAll('.jspsych-btn');
+            buttons.forEach(btn => btn.disabled = true);
+            setTimeout(function () {
+                buttons.forEach(btn => btn.disabled = false);
+            }, 1000);
+        }
+    }
+    timeline.push(transitionToReview);
+
     // Add final gallery section where participants select their favorites
     timeline.push({
         type: jsPsychAnimationGridPreview,
         stimulus_json: stimulusFile,
         highlight_index: null,
         title: 'Review Your Sounds',
-        prompt: condition === 'referential' 
-            ? '<p>Click on each clip to play it with your sound. Select your 2 favorite clips!</p>'
-            : '<p>Click on each clip to play it with your sound. Select your 2 favorite clips!</p>',
-        button_label: 'Submit',
+        prompt: '<p>Click each clip to hear the sound you made for it. Select the two sounds you like most!</p>',
+        button_label: 'Continue',
         cell_size: 150,
         animation_duration: 3000,
         interactive_mode: true,
@@ -354,9 +366,9 @@ function runStudy(stimulusFile) {
     });
     //#endregion
 
-    const transition = {
+    const transitionToExitSurvey = {
         type: jsPsychHtmlButtonResponse,
-        stimulus: "Great job! Answer a few final questions to finish the study.",
+        stimulus: "Answer a few final questions to complete the study.",
         choices: ['Continue'],
         on_load: function () {
             const buttons = document.querySelectorAll('.jspsych-btn');
@@ -366,7 +378,7 @@ function runStudy(stimulusFile) {
             }, 1000);
         }
     }
-    timeline.push(transition);
+    timeline.push(transitionToExitSurvey);
 
     //#region EXIT SURVEY
     const exitSurvey1 = {
@@ -418,6 +430,27 @@ function runStudy(stimulusFile) {
     };
 
     timeline.push(exitSurvey1, exitSurvey2, exitSurvey3, exitSurvey4);
+
+    const goodbye = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: '<h2>Thank you for participating!</h2><p>You may now exit fullscreen mode and close this window.</p>',
+        choices: ['Finish'],
+        on_load: function () {
+            // Exit fullscreen mode
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+    };
+    timeline.push(goodbye);
+    //#endregion
+
 
     jsPsych.run(timeline);
 }
