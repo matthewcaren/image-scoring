@@ -2,7 +2,7 @@ const studyInstructions = {
     referential: {
         intro1: '<div style="padding: 0 100px;"><p>Imagine you are a sound effect designer!</p><p>You\'ll be shown a few short video clips. Your goal is to create a matching sound effect for each one.</p></div>',
         intro2: '<p>We\'ve provided you with a tool you can use to make a variety of sounds. To make sound, click and drag inside the panel below. That\'s it!</p><p>Drag your mouse to different places to make different sounds. Once you\'ve had a chance to play around with this tool, click "Next" to continue.</p>',
-        intro3: '<p>Now let\'s see exactly how this tool works by making a few specific sounds. Try tracing the arrow below and pay attention to what it sounds like.</p>',
+        intro3: '<p>Now, let\'s see exactly how this tool works by making a few specific sounds.</p><p>Trace the arrow below and pay attention to what it sounds like.</p>',
         intro4: '<p>Now trace over this arrow and notice what that sounds like.</p>',
         intro5: '<p>What about these arrows? What do you notice?</p>',
         intro6: '<div style="padding: 0 100px;"><p>Great! Now let\'s take a look at the different video clips you\'ll be creating sound effects for.</p></div>',
@@ -19,7 +19,7 @@ const studyInstructions = {
     musical: {
         intro1: '<div style="padding: 0 100px;"><p>Imagine you are a sound effect designer!</p><p>You\'ll be shown a few short video clips. Your goal is to create a pleasing sound effect for each one.</p></div>',
         intro2: '<p>We\'ve provided you with a tool you can use to make a variety of sounds. To make sound, click and drag inside the panel below. That\'s it!</p><p>Drag your mouse to different places to make different sounds. Once you\'ve had a chance to play around with this tool, click "Next" to continue.</p>',
-        intro3: '<p>Now let\'s see exactly how this tool works by making a few specific sounds. Try tracing the arrow below and pay attention to what it sounds like.</p>',
+        intro3: '<p>Now, let\'s see exactly how this tool works by making a few specific sounds.</p><p>Trace the arrow below and pay attention to what it sounds like.</p>',
         intro4: '<p>Now trace over this arrow and notice what that sounds like.</p>',
         intro5: '<p>What about these arrows? What do you notice?</p>',
         intro6: '<div style="padding: 0 100px;"><p>Great! Now let\'s take a look at the different video clips you\'ll be creating sound effects for.</p></div>',
@@ -430,25 +430,6 @@ function runStudy(stimulusFile) {
     };
 
     timeline.push(exitSurvey1, exitSurvey2, exitSurvey3, exitSurvey4);
-
-    const goodbye = {
-        type: jsPsychHtmlButtonResponse,
-        stimulus: '<h2>Thank you for participating!</h2><p>You may now exit fullscreen mode and close this window.</p>',
-        choices: ['Finish'],
-        on_load: function () {
-            // Exit fullscreen mode
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.mozCancelFullScreen) {
-                document.mozCancelFullScreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            }
-        }
-    };
-    timeline.push(goodbye);
     //#endregion
 
 
