@@ -1,6 +1,6 @@
 const studyInstructions = {
     referential: {
-        intro1: '<div style="padding: 0 100px;"><p>Imagine you are a sound effect designer.</p><p>You\'ll be shown a few short video clips. Your goal is to create a matching sound effect for each one.</p></div>',
+        intro1: '<div style="padding: 0 100px;"><p>Imagine you are a sound effect designer!</p><p>You\'ll be shown a few short video clips. Your goal is to create a matching sound effect for each one.</p></div>',
         intro2: '<p>We\'ve provided you with a tool you can use to make a variety of sounds. To make sound, click and drag inside the panel below. That\'s it!</p><p>Drag your mouse to different places to make different sounds. Once you\'ve had a chance to play around with this tool, click "Next" to continue.</p>',
         intro3: '<p>Now let\'s see exactly how this tool works by making a few specific sounds. Try tracing the arrow below and pay attention to what it sounds like.</p>',
         intro4: '<p>Now trace over this arrow and notice what that sounds like.</p>',
@@ -17,7 +17,7 @@ const studyInstructions = {
         matchingPrompt: '<p>Listen to the sound, then click on the clip it was made for.</p>'
     },
     musical: {
-        intro1: '<div style="padding: 0 100px;"><p>Imagine you are a sound effect designer.</p><p>You\'ll be shown a few short video clips. Your goal is to create a pleasing sound effect for each one.</p></div>',
+        intro1: '<div style="padding: 0 100px;"><p>Imagine you are a sound effect designer!</p><p>You\'ll be shown a few short video clips. Your goal is to create a pleasing sound effect for each one.</p></div>',
         intro2: '<p>We\'ve provided you with a tool you can use to make a variety of sounds. To make sound, click and drag inside the panel below. That\'s it!</p><p>Drag your mouse to different places to make different sounds. Once you\'ve had a chance to play around with this tool, click "Next" to continue.</p>',
         intro3: '<p>Now let\'s see exactly how this tool works by making a few specific sounds. Try tracing the arrow below and pay attention to what it sounds like.</p>',
         intro4: '<p>Now trace over this arrow and notice what that sounds like.</p>',
@@ -36,7 +36,20 @@ const studyInstructions = {
 };
 
 
-function runStudy(stimulusFile, condition) {
+function runStudy(stimulusFile) {
+    let condition = '';
+    
+    var urlParams = new URLSearchParams(window.location.search);
+    try {
+        gs.prolific_info.prolificID = urlParams.get('PROLIFIC_PID');
+        gs.prolific_info.prolificStudyID = urlParams.get('STUDY_ID');
+        gs.prolific_info.prolificSessionID = urlParams.get('SESSION_ID');
+
+        condition = urlParams.get('condition');
+    } catch (error) {
+        console.error('Error obtaining prolific URL parameters:', error);
+    }
+
     if (!["referential", "musical"].includes(condition)) {
         throw new Error(`Invalid condition: ${condition}. Must be either "referential" or "musical".`);
     }
@@ -249,7 +262,8 @@ function runStudy(stimulusFile, condition) {
             animation_canvas_size: 400,
             instrument_canvas_size: 400,
             animation_duration: 3000,
-            countdown_duration: 3000
+            countdown_duration: 3000,
+            data: { study_phase: "scoring_trial", stimulus_index: index }
         });
     });
 
@@ -284,9 +298,9 @@ function runStudy(stimulusFile, condition) {
                     }
                 }
             });
-            
             return audioRecordings;
-        }
+        },
+        data: { study_phase: "favorite_selection" }
     });
 
     // Add matching instruction
@@ -333,7 +347,8 @@ function runStudy(stimulusFile, condition) {
                 const synthTrials = allData.filter({trial_type: 'img-synth-response-anim'});
                 const trial = synthTrials.values().find(t => t.stimulus_index === correctIndex);
                 return trial ? trial.audio_url : null;
-            }
+            },
+            data: { study_phase: "matching_trial", trial_number: trialNum + 1 }
         });
     });
     //#endregion

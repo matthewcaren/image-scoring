@@ -118,7 +118,6 @@ var jsPsychImgSynthResponseAnim = (function (jspsych) {
     trial(display_element, trial) {
       // Constants
       const ANIMATION_DURATION = trial.animation_duration;
-      const COUNTDOWN_DURATION = trial.countdown_duration;
       const NOTE_LENGTH = 1.5;
       const MIN_FREQ = 220;
       const MAX_FREQ = 880;
