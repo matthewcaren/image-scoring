@@ -418,6 +418,20 @@ var jsPsychAnimationGridPreview = (function (jspsych) {
           grid.appendChild(cell);
         });
 
+        // Draw initial frame for each clip in interactive mode
+        if (trial.interactive_mode) {
+          const canvases = display_element.querySelectorAll('.grid-preview-cell canvas');
+          canvases.forEach(canvas => {
+            const index = parseInt(canvas.dataset.index);
+            const stimulus = stimuliData[index];
+            const ctx = canvas.getContext('2d');
+            
+            // Draw the first frame (t=0)
+            const params = getAnimationParams(stimulus, 0);
+            drawAmoeba(ctx, canvas.width / 2, canvas.height / 2, params);
+          });
+        }
+
         // Add button listener
         const continueBtn = display_element.querySelector('#continue-btn');
         if (trial.interactive_mode) {

@@ -439,6 +439,9 @@ var jsPsychImgSynthResponseAnim = (function (jspsych) {
           recordedAudioURL = URL.createObjectURL(audioBlob);
 
           if (currentPerformance) {
+            currentPerformance.audioBlob = audioBlob;
+            currentPerformance.audioURL = recordedAudioURL;
+
             // AUDIO STORAGE: convert audio blob to a list of audio samples at 48kHz, 16 bit, and store it as a hex string
             const reader = new FileReader();
             reader.onload = async () => {
@@ -516,6 +519,8 @@ var jsPsychImgSynthResponseAnim = (function (jspsych) {
           interactions: [...interactions],
           duration: performance.now() - performanceStartTime,
           timestamp: Date.now(),
+          audioBlob: null,  // Will be populated by mediaRecorder.onstop
+          audioURL: recordedAudioURL,
           audioSamples: null  // Will be populated by mediaRecorder.onstop
         };
         
