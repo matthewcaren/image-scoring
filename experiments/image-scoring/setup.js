@@ -46,12 +46,12 @@ function runStudy(stimulusFile) {
         gs.prolific_info.prolificSessionID = urlParams.get('SESSION_ID');
 
         condition = urlParams.get('condition');
+        if (!["referential", "musical"].includes(condition)) {
+            throw new Error(`Invalid condition: ${condition}. Must be either "referential" or "musical".`);
+        }
+        gs.session_info.condition = condition;
     } catch (error) {
         console.error('Error obtaining prolific URL parameters:', error);
-    }
-
-    if (!["referential", "musical"].includes(condition)) {
-        throw new Error(`Invalid condition: ${condition}. Must be either "referential" or "musical".`);
     }
 
     gs.session_info.send_data = function (data) {
@@ -64,7 +64,8 @@ function runStudy(stimulusFile) {
         socket.emit('currentData', json,
             gs.study_metadata.project, //dbname
             gs.study_metadata.experiment, //colname
-            gs.session_info.gameID);
+            gs.session_info.gameID,
+        );
         console.log(gs.study_metadata.project, gs.study_metadata.experiment, gs.session_info.gameID);
         console.log("data sent.");
     }

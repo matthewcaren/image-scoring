@@ -27,6 +27,7 @@ gs = {
         experiment_complete: undefined,
     },
     session_info: {
+        condition: undefined,
         gameID: undefined,
         participantID: undefined,
         numTrials: undefined,
