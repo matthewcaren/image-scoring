@@ -437,10 +437,50 @@ var jsPsychImgSynthResponseAnim = (function (jspsych) {
         mediaRecorder.onstop = () => {
           const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
           recordedAudioURL = URL.createObjectURL(audioBlob);
-          // Store the audio blob in the current performance
+
           if (currentPerformance) {
-            currentPerformance.audioBlob = audioBlob;
-            currentPerformance.audioURL = recordedAudioURL;
+            // AUDIO STORAGE: convert audio blob to a list of audio samples at 48kHz, 16 bit, and store it as a hex string
+            const reader = new FileReader();
+            reader.onload = async () => {
+              const arrayBuffer = reader.result;
+              const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+              const decodedAudio = await audioCtx.decodeAudioData(arrayBuffer);
+              
+              // Resample to 48kHz if needed and convert to 16-bit PCM
+              const sampleRate = 48000;
+              const numChannels = decodedAudio.numberOfChannels;
+              const length = Math.ceil(decodedAudio.duration * sampleRate);
+              
+              // Use first channel only (mono)
+              const channelData = decodedAudio.getChannelData(0);
+              const samples = new Int16Array(length);
+              
+              // Resample and convert to 16-bit
+              for (let i = 0; i < length; i++) {
+                const srcIndex = (i / sampleRate) * decodedAudio.sampleRate;
+                const srcIndexFloor = Math.floor(srcIndex);
+                const srcIndexCeil = Math.min(srcIndexFloor + 1, channelData.length - 1);
+                const fraction = srcIndex - srcIndexFloor;
+                
+                // Linear interpolation
+                const sample = channelData[srcIndexFloor] * (1 - fraction) + channelData[srcIndexCeil] * fraction;
+                
+                // Convert float (-1 to 1) to 16-bit int (-32768 to 32767)
+                samples[i] = Math.max(-32768, Math.min(32767, Math.floor(sample * 32767)));
+              }
+              
+              // Convert to hex string
+              let hexString = '';
+              for (let i = 0; i < samples.length; i++) {
+                const byte1 = samples[i] & 0xFF;
+                const byte2 = (samples[i] >> 8) & 0xFF;
+                hexString += byte1.toString(16).padStart(2, '0') + byte2.toString(16).padStart(2, '0');
+              }
+              
+              currentPerformance.audioSamples = hexString;
+              audioCtx.close();
+            };
+            reader.readAsArrayBuffer(audioBlob);
           }
         };
         
@@ -476,8 +516,7 @@ var jsPsychImgSynthResponseAnim = (function (jspsych) {
           interactions: [...interactions],
           duration: performance.now() - performanceStartTime,
           timestamp: Date.now(),
-          audioBlob: null,  // Will be populated by mediaRecorder.onstop
-          audioURL: null    // Will be populated by mediaRecorder.onstop
+          audioSamples: null  // Will be populated by mediaRecorder.onstop
         };
         
         recordingState = 'recorded';
@@ -522,7 +561,7 @@ var jsPsychImgSynthResponseAnim = (function (jspsych) {
         const retryBtn = document.getElementById('retry-btn');
         const nextBtn = document.getElementById('next-btn');
         
-        if (prompt) prompt.innerHTML = '<p>Playing...</p>';
+        if (prompt) prompt.innerHTML = '<p><i>playing...</i></p>';
         
         if (playBtn) {
           playBtn.disabled = true;

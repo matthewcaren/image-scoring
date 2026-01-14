@@ -281,7 +281,6 @@ var jsPsychAnimationMatching = (function (jspsych) {
               border-radius: 8px;
               cursor: pointer;
               font-size: 16px;
-              font-weight: bold;
             }
             .matching-play-btn:hover {
               background-color: #7fa4c7;

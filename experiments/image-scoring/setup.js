@@ -12,7 +12,7 @@ const studyInstructions = {
         previewPrompt: 'This is the clip you\'re about to make a sound for.',
         trialPrompt: '<p>Watch the clip and create a sound that matches it. You\'ll get to play along with the clip.</p>',
         reviewPrompt: '<p>Listen to your sound! Does it match the clip?</p>',
-        matchingIntro: '<div style="padding: 0 100px;"><p>Great! Now let\'s see how well your sounds match the clips.</p><p>You\'ll hear a sound you created, and we\'ll show you 4 clips. Click on the clip you think the sound was made for.</p></div>',
+        matchingIntro: '<div style="padding: 0 100px;"><p>Great! Now, let\'s see how well your sounds match the clips.</p><p>You\'ll hear a sound you created, and we\'ll show you 4 clips. Click on the clip you think the sound was made for.</p></div>',
         matchingTitle: 'Which clip does this sound go with?',
         matchingPrompt: '<p>Listen to the sound, then click on the clip it was made for.</p>'
     },
@@ -29,7 +29,7 @@ const studyInstructions = {
         previewPrompt: 'This is the clip you\'re about to make a sound for.',
         trialPrompt: '<p>Watch the clip and create a sound for it. You\'ll get to play along with the clip.</p>',
         reviewPrompt: '<p>Listen to your sound! Do you like it?</p>',
-        matchingIntro: '<div style="padding: 0 100px;"<p>Great! Now let\'s see how well your sounds match the clips.</p><p>You\'ll hear a sound you created, and we\'ll show you 4 clips. Click on the clip you think the sound was made for.</p></div>',
+        matchingIntro: '<div style="padding: 0 100px;"><p>Great! Now, let\'s see how well your sounds match the clips.</p><p>You\'ll hear a sound you created, and we\'ll show you 4 clips. Click on the clip you think the sound was made for.</p></div>',
         matchingTitle: 'Which clip does this sound go with?',
         matchingPrompt: '<p>Listen to the sound, then click on the clip it was made for.</p>'
     }
@@ -274,8 +274,8 @@ function runStudy(stimulusFile) {
         highlight_index: null,
         title: 'Review Your Sounds',
         prompt: condition === 'referential' 
-            ? '<p>Click on each clip to play it with your sound. Select your 2 favorites that best match their clips!</p>'
-            : '<p>Click on each clip to play it with your sound. Select your 2 favorites!</p>',
+            ? '<p>Click on each clip to play it with your sound. Select your 2 favorite clips!</p>'
+            : '<p>Click on each clip to play it with your sound. Select your 2 favorite clips!</p>',
         button_label: 'Submit',
         cell_size: 150,
         animation_duration: 3000,
@@ -355,7 +355,7 @@ function runStudy(stimulusFile) {
 
     const transition = {
         type: jsPsychHtmlButtonResponse,
-        stimulus: "Great job! You've completed the main task. Answer a few final questions to finish the study.",
+        stimulus: "Great job! Answer a few final questions to finish the study.",
         choices: ['Continue'],
         on_load: function () {
             const buttons = document.querySelectorAll('.jspsych-btn');
