@@ -361,7 +361,7 @@ function runStudy(stimulusFile, condition) {
 
     const exitSurvey3 = {
         type: jsPsychHtmlSliderResponse,
-        stimulus: '<p>How much did you think about <i>how well your sound matched the clip</i> when you created your sounds?</p>',
+        stimulus: '<p>How much did you think about <b>how well your sound matched the clip</b> when you created your sounds?</p>',
         labels: ['1<br>Not at all', '2', '3', '4', '5', '6', '7', '8', '9', '10<br>Very much'],
         min: 1,
         max: 10,
@@ -373,7 +373,7 @@ function runStudy(stimulusFile, condition) {
 
     const exitSurvey4 = {
         type: jsPsychHtmlSliderResponse,
-        stimulus: '<p>How much did you think about <i>how pleasing or enjoyable your sounds were</i> when you created your sounds?</p>',
+        stimulus: '<p>How much did you think about <b>how pleasing or enjoyable your sounds were</b> when you created your sounds?</p>',
         labels: ['1<br>Not at all', '2', '3', '4', '5', '6', '7', '8', '9', '10<br>Very much'],
         min: 1,
         max: 10,
