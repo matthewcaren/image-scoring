@@ -334,6 +334,20 @@ function runStudy(stimulusFile, condition) {
     });
     //#endregion
 
+    const transition = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: "Great job! You've completed the main task. Answer a few final questions to finish the study.",
+        choices: ['Continue'],
+        on_load: function () {
+            const buttons = document.querySelectorAll('.jspsych-btn');
+            buttons.forEach(btn => btn.disabled = true);
+            setTimeout(function () {
+                buttons.forEach(btn => btn.disabled = false);
+            }, 1000);
+        }
+    }
+    timeline.push(transition);
+
     //#region EXIT SURVEY
     const exitSurvey1 = {
         type: jsPsychHtmlSliderResponse,

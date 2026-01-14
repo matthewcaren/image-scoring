@@ -121,10 +121,6 @@ function serve() {
       if (!databaseName) {
         return failure(response, '/db/insert needs database');
       }
-      if (!databaseName.includes('_output')) {
-        console.log(`${databaseName}/${collectionName} is not a response database, appending _output`);
-        databaseName = databaseName.concat('_output');
-      }
 
       const database = connection.db(databaseName);
 
