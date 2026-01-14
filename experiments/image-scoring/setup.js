@@ -66,6 +66,8 @@ function runStudy(stimulusFile, condition) {
         }
     });
 
+    const timeline = [];
+
     //#region CONSENT FORM
     const consent = {
         data: { study_phase: "consent" },
@@ -182,8 +184,8 @@ function runStudy(stimulusFile, condition) {
         }
     };
 
-    // Instantiate timeline with instruction flow
-    const timeline = [intro1, intro2, intro3, intro4, intro5, intro6];
+    // Add instruction flow to timeline
+    timeline.push(intro1, intro2, intro3, intro4, intro5, intro6);
 
     // Add full batch preview
     timeline.push({
