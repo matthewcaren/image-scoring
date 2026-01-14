@@ -12,7 +12,7 @@ const studyInstructions = {
         previewPrompt: 'This is the clip you\'re about to make a sound for.',
         trialPrompt: '<p>Watch the clip and create a sound that matches it. You\'ll get to play along with the clip.</p>',
         reviewPrompt: '<p>Listen to your sound! Does it match the clip?</p>',
-        matchingIntro: '<div style="padding: 0 100px;"<p>Great! Now let\'s see how well your sounds match the clips.</p><p>You\'ll hear a sound you created, and we\'ll show you 4 clips. Click on the clip you think the sound was made for.</p></div>',
+        matchingIntro: '<div style="padding: 0 100px;"><p>Great! Now let\'s see how well your sounds match the clips.</p><p>You\'ll hear a sound you created, and we\'ll show you 4 clips. Click on the clip you think the sound was made for.</p></div>',
         matchingTitle: 'Which clip does this sound go with?',
         matchingPrompt: '<p>Listen to the sound, then click on the clip it was made for.</p>'
     },
@@ -73,7 +73,8 @@ function runStudy(stimulusFile, condition) {
         data: { study_phase: "consent" },
         type: jsPsychHtmlButtonResponse,
         stimulus:
-            '<h2>Rate That Video</h2><div style="text-align: left">' +
+            '<div style="padding: 0 100px;">' +
+            '<h2>Make Some Sounds!</h2><div style="text-align: left">' +
             "<p>Welcome! In this study you will watch animated video clips and make sounds using a web interface. The session should take about <b>15–20 minutes</b>.</p>" +
             "<div class='consent'>" +
             "<p>By clicking below, you are agreeing to take part in a study being conducted by cognitive scientists in the <b>Department of Psychology at Stanford University</b>. If you have questions about this research, please contact us at <a href='mailto:cogtoolslab.requester@gmail.com?subject=Image Scoring Study'>cogtoolslab.requester@gmail.com</a>. We will do our best to respond promptly and professionally.</p>" +
@@ -84,7 +85,8 @@ function runStudy(stimulusFile, condition) {
             "<li>Your responses are anonymous and will be analyzed only in aggregate form.</li>" +
             "</ul>" +
             "</div></div>" +
-            "<p>Do you consent to participate in this study as described above?</p>",
+            "<p>Do you consent to participate in this study as described above?</p>" +
+            '</div>',
         choices: ["Yes, I agree to participate"],
         margin_vertical: "30px",
         on_start: function () {
