@@ -372,7 +372,20 @@ var jsPsychAnimationMatching = (function (jspsych) {
           audioElement.pause();
         }
         
-        audioElement = new Audio(trial.audio_url);
+        // Resolve audio_url in case it's a function (jsPsych dynamic parameters)
+        let audioUrl = trial.audio_url;
+        if (typeof audioUrl === 'function') {
+          audioUrl = audioUrl();
+        }
+        
+        // Validate that we have a valid audio URL
+        if (!audioUrl) {
+          playBtn.disabled = false;
+          console.error('Error: Audio URL is not available. The audio file may not have been saved yet.');
+          return;
+        }
+        
+        audioElement = new Audio(audioUrl);
         
         audioElement.onended = () => {
           playBtn.disabled = false;
@@ -380,10 +393,13 @@ var jsPsychAnimationMatching = (function (jspsych) {
         
         audioElement.onerror = () => {
           playBtn.disabled = false;
-          console.error('Error playing audio');
+          console.error('Error playing audio from:', audioUrl);
         };
         
-        audioElement.play();
+        audioElement.play().catch(err => {
+          playBtn.disabled = false;
+          console.error('Failed to play audio:', err);
+        });
       };
 
       const selectClip = (stimulusIndex) => {

@@ -387,8 +387,9 @@ function runStudy(stimulusFile) {
         labels: ['1<br>Not at all', '2', '3', '4', '5', '6', '7', '8', '9', '10<br>Very much'],
         min: 1,
         max: 10,
-        start: 5,
+        slider_start: 5,
         step: 1,
+        slider_width: 500,
         require_movement: true,
         data: { study_phase: "exit_survey", question: "enjoyment" }
     };
@@ -399,8 +400,9 @@ function runStudy(stimulusFile) {
         labels: ['1<br>Not at all', '2', '3', '4', '5', '6', '7', '8', '9', '10<br>Very much'],
         min: 1,
         max: 10,
-        start: 5,
+        slider_start: 5,
         step: 1,
+        slider_width: 500,
         require_movement: true,
         data: { study_phase: "exit_survey", question: "comfort" }
     };
@@ -411,8 +413,9 @@ function runStudy(stimulusFile) {
         labels: ['1<br>Not at all', '2', '3', '4', '5', '6', '7', '8', '9', '10<br>Very much'],
         min: 1,
         max: 10,
-        start: 5,
+        slider_start: 5,
         step: 1,
+        slider_width: 500,
         require_movement: true,
         data: { study_phase: "exit_survey", question: "matching_focus" }
     };
@@ -423,8 +426,9 @@ function runStudy(stimulusFile) {
         labels: ['1<br>Not at all', '2', '3', '4', '5', '6', '7', '8', '9', '10<br>Very much'],
         min: 1,
         max: 10,
-        start: 5,
+        slider_start: 5,
         step: 1,
+        slider_width: 500,
         require_movement: true,
         data: { study_phase: "exit_survey", question: "aesthetics_focus" }
     };
