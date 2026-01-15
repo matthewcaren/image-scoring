@@ -352,6 +352,12 @@ var jsPsychImgSynthResponseAnim = (function (jspsych) {
         if (params) {
           drawAmoeba(ctx, centerX, centerY, params);
         }
+        
+        // Update progress bar
+        const progressBar = display_element.querySelector('#animation-progress-bar');
+        if (progressBar) {
+          progressBar.style.width = (progress * 100) + '%';
+        }
       };
 
       // Play animation
@@ -651,6 +657,16 @@ var jsPsychImgSynthResponseAnim = (function (jspsych) {
       const containerClass = trial.tutorial ? 'img-synth-container-single' : 'img-synth-container';
       const html = `
         <style>
+          .animation-progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            background-color: black;
+            width: 0;
+            transition: width 16ms linear;
+            z-index: 1000;
+          }
           .img-synth-container {
             display: flex;
             flex-direction: row;
@@ -860,6 +876,7 @@ var jsPsychImgSynthResponseAnim = (function (jspsych) {
         <div class="img-synth-controls" id="controls-container">
           ${trial.tutorial ? '<button id="finish-btn" class="jspsych-btn" disabled>Next</button>' : '<button id="ready-btn" class="jspsych-btn">I\'m Ready</button>'}
         </div>
+        <div class="animation-progress-bar" id="animation-progress-bar"></div>
       `;
 
       display_element.innerHTML = html;

@@ -263,6 +263,16 @@ var jsPsychAnimationGridPreview = (function (jspsych) {
               margin-bottom: 10px;
               color: #455d7a;
             }
+            .animation-progress-bar {
+              position: fixed;
+              bottom: 0;
+              left: 0;
+              height: 2px;
+              background-color: black;
+              width: 0;
+              transition: width 16ms linear;
+              z-index: 1000;
+            }
             .grid-preview-prompt {
               font-size: 16px;
               margin-bottom: 30px;
@@ -350,6 +360,7 @@ var jsPsychAnimationGridPreview = (function (jspsych) {
               <button class="jspsych-btn" id="continue-btn">${trial.button_label}</button>
             </div>
           </div>
+          <div class="animation-progress-bar" id="animation-progress-bar"></div>
         `;
 
         display_element.innerHTML = html;
@@ -504,6 +515,12 @@ var jsPsychAnimationGridPreview = (function (jspsych) {
           currentlyPlayingIndex = null;
           cells[index].classList.remove('playing');
           playButtons.forEach(btn => btn.disabled = false);
+          
+          // Reset progress bar
+          const progressBar = display_element.querySelector('#animation-progress-bar');
+          if (progressBar) {
+            progressBar.style.width = '0%';
+          }
           
           // Redraw the clip at its start state
           ctx.clearRect(0, 0, canvas.width, canvas.height);
