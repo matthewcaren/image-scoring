@@ -187,6 +187,13 @@ function runStudy(stimulusFile) {
         synth_type: 'legato'
     };
 
+    const instrumentFreePlay = {
+        type: jsPsychImgSynthResponseAnim,
+        prompt: "Great job! Now it’s your turn to try making some sounds. Go ahead and play with the instrument until you feel comfortable with the instrument and feel like you know how to make whatever sound you like.",
+        tutorial: true,
+        synth_type: 'legato'
+    };
+
     const intro6 = {
         type: jsPsychHtmlButtonResponse,
         stimulus: instructions.intro6,
@@ -201,7 +208,7 @@ function runStudy(stimulusFile) {
     };
 
     // Add instruction flow to timeline
-    timeline.push(intro1, intro2, intro3, intro4, intro5, intro6);
+    timeline.push(intro1, intro2, intro3, intro4, intro5, instrumentFreePlay, intro6);
 
     // Add full batch preview
     timeline.push({
