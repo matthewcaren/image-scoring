@@ -1,6 +1,6 @@
 const studyInstructions = {
     referential: {
-        intro1: '<div style="padding: 0 100px;"><p>Imagine you are a sound effect designer!</p><p>You\'ll be shown a few short video clips. Your goal is to create a matching sound effect for each one.</p></div>',
+        intro1: '<div style="padding: 0 100px;"><img src="img/diagram-referential.png" style="max-width: 100%;"><p>Imagine you are a sound effect designer!</p><p>You\'ll be shown a few short video clips. Your goal is to create a matching sound effect for each one.</p></div>',
         intro2: '<p>We\'ve provided you with a tool you can use to make a variety of sounds. To make sound, click and drag inside the panel below. That\'s it!</p><p>Drag your mouse to different places to make different sounds. Once you\'ve had a chance to play around with this tool, click "Next" to continue.</p>',
         intro3: '<p>Now, let\'s see exactly how this tool works by making a few specific sounds.</p><p>Trace the arrow below and pay attention to what it sounds like.</p>',
         intro4: '<p>Now trace over this arrow and notice what that sounds like.</p>',
@@ -17,7 +17,7 @@ const studyInstructions = {
         matchingPrompt: '<p>Listen to the sound, then click on the clip it was made for.</p>'
     },
     musical: {
-        intro1: '<div style="padding: 0 100px;"><p>Imagine you are a sound effect designer!</p><p>You\'ll be shown a few short video clips. Your goal is to create a pleasing sound effect for each one.</p></div>',
+        intro1: '<div style="padding: 0 100px;"><img src="img/diagram-musical.png" style="max-width: 100%;"><p>Imagine you are a sound effect designer!</p><p>You\'ll be shown a few short video clips. Your goal is to create a pleasing sound effect for each one.</p></div>',
         intro2: '<p>We\'ve provided you with a tool you can use to make a variety of sounds. To make sound, click and drag inside the panel below. That\'s it!</p><p>Drag your mouse to different places to make different sounds. Once you\'ve had a chance to play around with this tool, click "Next" to continue.</p>',
         intro3: '<p>Now, let\'s see exactly how this tool works by making a few specific sounds.</p><p>Trace the arrow below and pay attention to what it sounds like.</p>',
         intro4: '<p>Now trace over this arrow and notice what that sounds like.</p>',
