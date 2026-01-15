@@ -23,7 +23,7 @@ const studyInstructions = {
         intro4: '<p>Now trace over this arrow and notice what that sounds like.</p>',
         intro5: '<p>What about these arrows? What do you notice?</p>',
         intro6: '<div style="padding: 0 100px;"><p>Great! Now let\'s take a look at the different video clips you\'ll be creating sound effects for.</p></div>',
-        intro7: '<div style="padding: 0 100px;"><p>For each video clip, create a sound effect that you think is pleasing to listen to.</p><p>Each sound effect should be different from the others, and it should be easy to tell which video clip it was supposed to go with.</p><p>But above all, <b>create sounds that you like</b>.</p><p>At the end of the study, you\'ll get a chance to hear all your sound effects again and tell us which ones were your favorites!</p></div>',
+        intro7: '<div style="padding: 0 100px;"><p>For each video clip, create a sound effect that you think is pleasing to listen to. Each sound effect should be different from the others, and it should be easy to tell which video clip it was supposed to go with.</p><p>But above all, <b>create sounds that you like</b>.</p><p>At the end of the study, you\'ll get a chance to hear all your sound effects again and tell us which ones were your favorites!</p></div>',
         gridTitle: 'Here are the 9 video clips you will see today.',
         gridPrompt: 'You will make sounds for them one at a time.',
         previewPrompt: 'This is the clip you\'re about to make a sound for.',
@@ -196,7 +196,7 @@ function runStudy(stimulusFile) {
             buttons.forEach(btn => btn.disabled = true);
             setTimeout(function() {
                 buttons.forEach(btn => btn.disabled = false);
-            }, 2000);
+            }, 1000);
         }
     };
 

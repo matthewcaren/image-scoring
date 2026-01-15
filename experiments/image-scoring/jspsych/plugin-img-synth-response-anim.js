@@ -625,6 +625,8 @@ var jsPsychImgSynthResponseAnim = (function (jspsych) {
         const ctx = instrumentCanvas.getContext('2d');
         ctx.clearRect(0, 0, instrumentCanvas.width, instrumentCanvas.height);
         activeCircles = [];
+        currentMousePos = null;
+        legatoCircle = null;
         
         const controlsContainer = display_element.querySelector('#controls-container');
         controlsContainer.innerHTML = `
