@@ -241,6 +241,13 @@ var jsPsychAnimationMatching = (function (jspsych) {
         ctx.restore();
       };
 
+      const drawProgressBar = (ctx, canvas, progress) => {
+        const barHeight = 2;
+        const barWidth = canvas.width * progress;
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, canvas.height - barHeight, barWidth, barHeight);
+      };
+
       const getAnimationParams = (stimulus, t) => {
         return {
           irregularity: lerp(stimulus.start_state.irregularity, stimulus.end_state.irregularity, t),
@@ -264,16 +271,6 @@ var jsPsychAnimationMatching = (function (jspsych) {
               font-size: 24px;
               margin-bottom: 10px;
               color: #455d7a;
-            }
-            .animation-progress-bar {
-              position: fixed;
-              bottom: 0;
-              left: 0;
-              height: 2px;
-              background-color: black;
-              width: 0;
-              transition: width 16ms linear;
-              z-index: 1000;
             }
             .matching-prompt {
               font-size: 16px;
@@ -343,7 +340,6 @@ var jsPsychAnimationMatching = (function (jspsych) {
               <button class="jspsych-btn" id="continue-btn" disabled>${trial.button_label}</button>
             </div>
           </div>
-          <div class="animation-progress-bar" id="animation-progress-bar"></div>
         `;
 
         display_element.innerHTML = html;
@@ -436,7 +432,6 @@ var jsPsychAnimationMatching = (function (jspsych) {
 
       const startAnimations = () => {
         const canvases = display_element.querySelectorAll('.matching-cell canvas');
-        const progressBar = display_element.querySelector('#animation-progress-bar');
         
         const animate = () => {
           if (!isRunning) return;
@@ -454,14 +449,8 @@ var jsPsychAnimationMatching = (function (jspsych) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const params = getAnimationParams(stimulus, progress);
             drawAmoeba(ctx, canvas.width / 2, canvas.height / 2, params);
+            drawProgressBar(ctx, canvas, progress);
           });
-          
-          // Update progress bar
-          const elapsed = currentTime % trial.animation_duration;
-          const progress = (elapsed / trial.animation_duration) * 100;
-          if (progressBar) {
-            progressBar.style.width = progress + '%';
-          }
           
           requestAnimationFrame(animate);
         };

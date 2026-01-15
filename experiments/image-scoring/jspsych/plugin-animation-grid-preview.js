@@ -239,6 +239,13 @@ var jsPsychAnimationGridPreview = (function (jspsych) {
         ctx.restore();
       };
 
+      const drawProgressBar = (ctx, canvas, progress) => {
+        const barHeight = 2;
+        const barWidth = canvas.width * progress;
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, canvas.height - barHeight, barWidth, barHeight);
+      };
+
       const getAnimationParams = (stimulus, t) => {
         return {
           irregularity: lerp(stimulus.start_state.irregularity, stimulus.end_state.irregularity, t),
@@ -262,16 +269,6 @@ var jsPsychAnimationGridPreview = (function (jspsych) {
               font-size: 24px;
               margin-bottom: 10px;
               color: #455d7a;
-            }
-            .animation-progress-bar {
-              position: fixed;
-              bottom: 0;
-              left: 0;
-              height: 2px;
-              background-color: black;
-              width: 0;
-              transition: width 16ms linear;
-              z-index: 1000;
             }
             .grid-preview-prompt {
               font-size: 16px;
@@ -360,7 +357,6 @@ var jsPsychAnimationGridPreview = (function (jspsych) {
               <button class="jspsych-btn" id="continue-btn">${trial.button_label}</button>
             </div>
           </div>
-          <div class="animation-progress-bar" id="animation-progress-bar"></div>
         `;
 
         display_element.innerHTML = html;
@@ -505,6 +501,7 @@ var jsPsychAnimationGridPreview = (function (jspsych) {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           const params = getAnimationParams(stimulus, progress);
           drawAmoeba(ctx, canvas.width / 2, canvas.height / 2, params);
+          drawProgressBar(ctx, canvas, progress);
           
           if (elapsed < trial.animation_duration) {
             requestAnimationFrame(animateClip);
@@ -516,16 +513,11 @@ var jsPsychAnimationGridPreview = (function (jspsych) {
           cells[index].classList.remove('playing');
           playButtons.forEach(btn => btn.disabled = false);
           
-          // Reset progress bar
-          const progressBar = display_element.querySelector('#animation-progress-bar');
-          if (progressBar) {
-            progressBar.style.width = '0%';
-          }
-          
           // Redraw the clip at its start state
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           const params = getAnimationParams(stimulus, 0);
           drawAmoeba(ctx, canvas.width / 2, canvas.height / 2, params);
+          drawProgressBar(ctx, canvas, 0);
         };
         
         currentAudio.play();
@@ -578,6 +570,7 @@ var jsPsychAnimationGridPreview = (function (jspsych) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const params = getAnimationParams(stimulus, progress);
             drawAmoeba(ctx, canvas.width / 2, canvas.height / 2, params);
+            drawProgressBar(ctx, canvas, progress);
           });
           
           requestAnimationFrame(animate);
