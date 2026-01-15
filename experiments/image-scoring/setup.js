@@ -432,6 +432,19 @@ function runStudy(stimulusFile) {
     timeline.push(exitSurvey1, exitSurvey2, exitSurvey3, exitSurvey4);
     //#endregion
 
+    const goodbye = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: '<div style="padding: 0 100px;"><p>You\'ve completed all the tasks. Press <i>Finish</i> to complete the study and return to Prolific to get paid.</p></div>',
+        choices: ['Finish'],
+        on_load: function () {
+            const buttons = document.querySelectorAll('.jspsych-btn');
+            buttons.forEach(btn => btn.disabled = true);
+            setTimeout(function () {
+                buttons.forEach(btn => btn.disabled = false);
+            }, 1000);
+        }
+    }
+    timeline.push(goodbye);
 
     jsPsych.run(timeline);
 }
