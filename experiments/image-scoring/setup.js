@@ -132,7 +132,7 @@ function runStudy() {
         on_start: function () {
             // Consent started
         },
-        on_finish: function () {
+        on_finish: function (data) {
             // Record consent completion time
             gs.session_timing.consent_complete = Date.now();
 
@@ -147,6 +147,8 @@ function runStudy() {
             } else if (element.msRequestFullscreen) {
                 element.msRequestFullscreen();
             }
+
+            gs.session_info.send_data(data);
         }
     };
     timeline.push(consent);
@@ -264,7 +266,7 @@ function runStudy() {
     // Add instruction flow to timeline
     timeline.push(intro1, intro2, intro3, intro4, intro5, instrumentFreePlay, intro6);
 
-    // #endregion
+    //#endregion
 
     //#region MAIN STUDY TRIALS
 
@@ -334,7 +336,10 @@ function runStudy() {
             instrument_canvas_size: 400,
             animation_duration: 3000,
             countdown_duration: 3000,
-            data: { study_phase: "scoring_trial", stimulus_index: index }
+            data: { study_phase: "scoring_trial", stimulus_index: index },
+            on_finish: function(data) {
+                gs.session_info.send_data(data);
+            }
         });
     });
 
@@ -384,7 +389,10 @@ function runStudy() {
             });
             return audioRecordings;
         },
-        data: { study_phase: "favorite_selection" }
+        data: { study_phase: "favorite_selection" },
+        on_finish: function(data) {
+            gs.session_info.send_data(data);
+        }
     });
 
     // Add matching instruction
@@ -435,7 +443,10 @@ function runStudy() {
                 );
                 return trial ? [trial.audio_url] : [null];
             },
-            data: { study_phase: "matching_trial", trial_number: trialNum + 1 }
+            data: { study_phase: "matching_trial", trial_number: trialNum + 1 },
+            on_finish: function(data) {
+                gs.session_info.send_data(data);
+            }
         });
     });
     //#endregion
@@ -468,7 +479,10 @@ function runStudy() {
         step: 1,
         slider_width: 500,
         require_movement: true,
-        data: { study_phase: "exit_survey", question: "enjoyment" }
+        data: { study_phase: "exit_survey", question: "enjoyment" },
+        on_finish: function(data) {
+            gs.session_info.send_data(data);
+        }
     };
 
     const exitSurvey2 = {
@@ -481,7 +495,10 @@ function runStudy() {
         step: 1,
         slider_width: 500,
         require_movement: true,
-        data: { study_phase: "exit_survey", question: "comfort" }
+        data: { study_phase: "exit_survey", question: "comfort" },
+        on_finish: function (data) {
+            gs.session_info.send_data(data);
+        }
     };
 
     const exitSurvey3 = {
@@ -494,7 +511,10 @@ function runStudy() {
         step: 1,
         slider_width: 500,
         require_movement: true,
-        data: { study_phase: "exit_survey", question: "matching_focus" }
+        data: { study_phase: "exit_survey", question: "matching_focus" },
+        on_finish: function (data) {
+            gs.session_info.send_data(data);
+        }
     };
 
     const exitSurvey4 = {
@@ -507,7 +527,10 @@ function runStudy() {
         step: 1,
         slider_width: 500,
         require_movement: true,
-        data: { study_phase: "exit_survey", question: "aesthetics_focus" }
+        data: { study_phase: "exit_survey", question: "aesthetics_focus" },
+        on_finish: function (data) {
+            gs.session_info.send_data(data);
+        }
     };
 
     const musicalExperience = {
@@ -521,7 +544,8 @@ function runStudy() {
         slider_width: 500,
         require_movement: true,
         data: { study_phase: "exit_survey", question: "musical_experience" },
-        on_finish: function() {
+        on_finish: function (data) {
+            gs.session_info.send_data(data);
             gs.session_timing.exit_survey_complete = Date.now();
         }
     };
@@ -533,6 +557,13 @@ function runStudy() {
         type: jsPsychHtmlButtonResponse,
         stimulus: '<div style="padding: 0 100px;"><p>You\'ve reached the end! In a moment, click <i>Finish</i> to return to Prolific to get paid.</p></div>',
         choices: ['Finish'],
+        on_load: function () {
+            const buttons = document.querySelectorAll('.jspsych-btn');
+            buttons.forEach(btn => btn.disabled = true);
+            setTimeout(function () {
+                buttons.forEach(btn => btn.disabled = false);
+            }, 4000);
+        },
         on_start: function () {
             gs.session_timing.experiment_complete = Date.now();
         }
