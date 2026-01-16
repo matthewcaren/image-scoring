@@ -85,7 +85,24 @@ function runStudy() {
 
     const jsPsych = initJsPsych({
         on_finish: function(data) {
-            // jsPsych.data.displayData();
+            console.log("Experiment complete. Preparing to send data...");
+            console.log(data);
+            gs.session_info.send_data(data);
+
+            // Exit fullscreen
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+
+            // Redirect to Prolific
+            window.onbeforeunload = null;
+            window.open("https://example.com/", "_self");
         }
     });
 
@@ -506,9 +523,6 @@ function runStudy() {
         data: { study_phase: "exit_survey", question: "musical_experience" },
         on_finish: function() {
             gs.session_timing.exit_survey_complete = Date.now();
-            console.log("Experiment complete. Preparing to send data...");
-            console.log(data);
-            gs.session_info.send_data(data);
         }
     };
 
@@ -521,24 +535,6 @@ function runStudy() {
         choices: ['Finish'],
         on_start: function () {
             gs.session_timing.experiment_complete = Date.now();
-            
-            // Exit fullscreen
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.mozCancelFullScreen) {
-                document.mozCancelFullScreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            }
-        },
-        on_load: function () {
-            const buttons = document.querySelectorAll('.jspsych-btn');
-            buttons.forEach(btn => btn.disabled = true);
-            setTimeout(function () {
-                buttons.forEach(btn => btn.disabled = false);
-            }, 5000);
         }
     };
     timeline.push(goodbye);

@@ -483,15 +483,18 @@ var jsPsychAnimationGridPreview = (function (jspsych) {
         currentlyPlayingIndex = index;
         
         // Get the audio URL for this clip
-        const audioURL = trial.audio_recordings[index];
+        // Map stimulus index to display order position since audio_recordings is indexed by display order
+        const displayOrder = trial.stimulus_indices || stimuliData.map((_, i) => i);
+        const displayIndex = displayOrder.indexOf(index);
+        const audioURL = trial.audio_recordings[displayIndex];
         if (!audioURL) {
           console.error('No audio recording for index:', index);
           playButtons.forEach(btn => btn.disabled = false);
           return;
         }
         
-        // Mark this cell as playing
-        cells[index].classList.add('playing');
+        // Mark this cell as playing (cells are in display order, so use displayIndex)
+        cells[displayIndex].classList.add('playing');
         
         // Create and play audio
         currentAudio = new Audio(audioURL);
@@ -520,7 +523,7 @@ var jsPsychAnimationGridPreview = (function (jspsych) {
         
         currentAudio.onended = () => {
           currentlyPlayingIndex = null;
-          cells[index].classList.remove('playing');
+          cells[displayIndex].classList.remove('playing');
           playButtons.forEach(btn => btn.disabled = false);
           
           // Redraw the clip at its start state
