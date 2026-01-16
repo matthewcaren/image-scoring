@@ -55,6 +55,12 @@ var jsPsychAnimationGridPreview = (function (jspsych) {
         type: jspsych.ParameterType.INT,
         default: 2,
       },
+      /** Array of stimulus indices controlling display order. If null, uses natural order from JSON. */
+      stimulus_indices: {
+        type: jspsych.ParameterType.INT,
+        array: true,
+        default: null,
+      },
     },
     data: {
       /** Response time */
@@ -361,14 +367,18 @@ var jsPsychAnimationGridPreview = (function (jspsych) {
 
         display_element.innerHTML = html;
 
-        // Create canvases for each stimulus
+        // Determine display order: use stimulus_indices if provided, otherwise natural order
+        const displayOrder = trial.stimulus_indices || stimuliData.map((_, i) => i);
+
+        // Create canvases for each stimulus in the specified display order
         const grid = display_element.querySelector('#animation-grid');
-        stimuliData.forEach((stimulus, index) => {
+        displayOrder.forEach((stimulusIndex) => {
+          const stimulus = stimuliData[stimulusIndex];
           const cell = document.createElement('div');
           cell.className = 'grid-preview-cell';
           
           if (trial.highlight_index !== null) {
-            if (index === trial.highlight_index) {
+            if (stimulusIndex === trial.highlight_index) {
               cell.classList.add('highlighted');
             } else {
               cell.classList.add('dimmed');
@@ -382,19 +392,19 @@ var jsPsychAnimationGridPreview = (function (jspsych) {
           const canvas = document.createElement('canvas');
           canvas.width = trial.cell_size;
           canvas.height = trial.cell_size;
-          canvas.dataset.index = index;
+          canvas.dataset.index = stimulusIndex;
           
           cell.appendChild(canvas);
           
           // Add interactive controls if in interactive mode
-          if (trial.interactive_mode && trial.audio_recordings && trial.audio_recordings[index]) {
+          if (trial.interactive_mode && trial.audio_recordings && trial.audio_recordings[stimulusIndex]) {
             const controls = document.createElement('div');
             controls.className = 'grid-preview-cell-controls';
             
             const playBtn = document.createElement('button');
             playBtn.className = 'grid-preview-play-btn';
             playBtn.textContent = 'Play';
-            playBtn.dataset.index = index;
+            playBtn.dataset.index = stimulusIndex;
             
             const favoriteLabel = document.createElement('label');
             favoriteLabel.className = 'grid-preview-favorite-label';
@@ -402,7 +412,7 @@ var jsPsychAnimationGridPreview = (function (jspsych) {
             const favoriteCheckbox = document.createElement('input');
             favoriteCheckbox.type = 'checkbox';
             favoriteCheckbox.className = 'grid-preview-favorite-checkbox';
-            favoriteCheckbox.dataset.index = index;
+            favoriteCheckbox.dataset.index = stimulusIndex;
             
             favoriteLabel.appendChild(favoriteCheckbox);
             favoriteLabel.appendChild(document.createTextNode('Favorite'));
@@ -414,11 +424,11 @@ var jsPsychAnimationGridPreview = (function (jspsych) {
             // Add event listeners
             playBtn.addEventListener('click', (e) => {
               e.stopPropagation();
-              playClip(index);
+              playClip(stimulusIndex);
             });
             
             favoriteCheckbox.addEventListener('change', (e) => {
-              handleFavoriteToggle(index, e.target.checked);
+              handleFavoriteToggle(stimulusIndex, e.target.checked);
             });
           }
           

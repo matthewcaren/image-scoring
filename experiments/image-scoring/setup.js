@@ -36,8 +36,9 @@ const studyInstructions = {
 };
 
 
-function runStudy(stimulusFile) {
+function runStudy() {
     let condition = '';
+    let stimulusFile = '';
     
     var urlParams = new URLSearchParams(window.location.search);
     try {
@@ -45,11 +46,21 @@ function runStudy(stimulusFile) {
         gs.prolific_info.prolificStudyID = urlParams.get('STUDY_ID');
         gs.prolific_info.prolificSessionID = urlParams.get('SESSION_ID');
 
+        // Get and validate condition
         condition = urlParams.get('condition');
         if (!["referential", "musical"].includes(condition)) {
             throw new Error(`Invalid condition: ${condition}. Must be either "referential" or "musical".`);
         }
         gs.session_info.condition = condition;
+
+        // Get stimulus batch index
+        stimulusFile = urlParams.get('stim');
+        if (!['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].includes(stimulusFile)) {
+            throw new Error(`Invalid stimulus set: ${stimulusFile}. Must be one of A, B, C, D, E, F, G, H.`);
+        }
+        gs.session_info.stimulus = stimulusFile;
+        stimulusFile = `stimuli/generated_stimuli/${stimulusFile}.json`;
+        
     } catch (error) {
         console.error('Error obtaining prolific URL parameters:', error);
     }
@@ -127,7 +138,7 @@ function runStudy(stimulusFile) {
     //#endregion
 
 
-    //#region STUDY TIMELINE
+    //#region STUDY INTRO
 
     // Shuffle order of the 3 rows of stimulus indices, and the order of the clips within the rows
     let stimulusIndices = [0, 1, 2, 3, 4, 5, 6, 7, 8];
@@ -173,7 +184,7 @@ function runStudy(stimulusFile) {
             buttons.forEach(btn => btn.disabled = true);
             setTimeout(function() {
                 buttons.forEach(btn => btn.disabled = false);
-            }, 3000);
+            }, 4000);
         }
     };
 
@@ -237,6 +248,10 @@ function runStudy(stimulusFile) {
 
     // Add instruction flow to timeline
     timeline.push(intro1, intro2, intro3, intro4, intro5, instrumentFreePlay, intro6);
+
+    // #endregion
+
+    //#region MAIN STUDY TRIALS
 
     // Add full batch preview
     timeline.push({
