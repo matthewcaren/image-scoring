@@ -12,6 +12,14 @@ gs = {
         stimulus: undefined,
         send_data: undefined
     },
+    session_timing: {
+        study_start: undefined,
+        consent_complete: undefined,
+        instructions_complete: undefined,
+        trials_complete: undefined,
+        exit_survey_complete: undefined,
+        experiment_complete: undefined
+    },
     prolific_info: {
         prolificPID: undefined,
         prolificStudyID: undefined,

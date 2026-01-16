@@ -37,6 +37,8 @@ const studyInstructions = {
 
 
 function runStudy() {
+    gs.session_timing.study_start = Date.now();
+    
     let condition = '';
     let stimulusFile = '';
     
@@ -111,7 +113,7 @@ function runStudy() {
         choices: ["Yes, I agree to participate"],
         margin_vertical: "30px",
         on_start: function () {
-            gs.session_timing.consent_start = Date.now();
+            // Consent started
         },
         on_finish: function () {
             // Record consent completion time
@@ -273,6 +275,9 @@ function runStudy() {
         type: jsPsychHtmlButtonResponse,
         stimulus: instructions.intro7,
         choices: ['Continue'],
+        on_finish: function() {
+            gs.session_timing.instructions_complete = Date.now();
+        },
         on_load: function() {
             const buttons = document.querySelectorAll('.jspsych-btn');
             buttons.forEach(btn => btn.disabled = true);
@@ -419,6 +424,9 @@ function runStudy() {
         type: jsPsychHtmlButtonResponse,
         stimulus: "Answer a few final questions to complete the study.",
         choices: ['Continue'],
+        on_start: function() {
+            gs.session_timing.trials_complete = Date.now();
+        },
         on_load: function () {
             const buttons = document.querySelectorAll('.jspsych-btn');
             buttons.forEach(btn => btn.disabled = true);
@@ -494,6 +502,7 @@ function runStudy() {
         require_movement: true,
         data: { study_phase: "exit_survey", question: "musical_experience" },
         on_finish: function() {
+            gs.session_timing.exit_survey_complete = Date.now();
             console.log("Experiment complete. Preparing to send data...");
             console.log(data);
             gs.session_info.send_data(data);
@@ -508,6 +517,8 @@ function runStudy() {
         stimulus: '<div style="padding: 0 100px;"><p>You\'ve reached the end! In a moment, click <i>Finish</i> to return to Prolific to get paid.</p></div>',
         choices: ['Finish'],
         on_start: function () {
+            gs.session_timing.experiment_complete = Date.now();
+            
             // Exit fullscreen
             if (document.exitFullscreen) {
                 document.exitFullscreen();
