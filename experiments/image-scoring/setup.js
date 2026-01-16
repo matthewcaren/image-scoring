@@ -140,6 +140,30 @@ function runStudy(stimulusFile) {
     // Get instruction text based on condition
     const instructions = studyInstructions[condition];
 
+    const audioCheck = {
+        type: jsPsychAudioButtonResponse,
+        stimulus: 'delay-spoken.wav',
+        prompt: '<p>Make sure your sound is on and volume is up! To confirm, listen to this clip and click the word you hear.</p>',
+        choices: ['explain', 'orange', 'support', 'delay', 'table', 'guitar'],
+        data: { study_phase: "audio_check" },
+        on_load: function() {
+            const buttons = document.querySelectorAll('.jspsych-btn');
+            buttons.forEach(btn => btn.disabled = true);
+            setTimeout(function() {
+                buttons.forEach(btn => btn.disabled = false);
+            }, 2000);
+        }
+    };
+
+    const audioCheckLoop = {
+        timeline: [audioCheck],
+        loop_function: function(data) {
+            return data.values()[0].response !== 3; // Keep looping until they select 'delay' (index 3)
+        }
+    };
+
+    timeline.push(audioCheckLoop);
+
     // Instruction screens with 3-second delay on continue button
     const intro1 = {
         type: jsPsychHtmlButtonResponse,
@@ -367,11 +391,11 @@ function runStudy(stimulusFile) {
             button_label: 'Continue',
             cell_size: 150,
             animation_duration: 3000,
-            audio_url: function() {
+            audio_recordings: function() {
                 const allData = jsPsych.data.get();
                 const synthTrials = allData.filter({trial_type: 'img-synth-response-anim'});
                 const trial = synthTrials.values().find(t => t.stimulus_index === correctIndex);
-                return trial ? trial.audio_url : null;
+                return trial ? [trial.audio_url] : [null];
             },
             data: { study_phase: "matching_trial", trial_number: trialNum + 1 }
         });
@@ -445,22 +469,21 @@ function runStudy(stimulusFile) {
         data: { study_phase: "exit_survey", question: "aesthetics_focus" }
     };
 
-    timeline.push(exitSurvey1, exitSurvey2, exitSurvey3, exitSurvey4);
-    //#endregion
+    const musicalExperience = {
+        type: jsPsychHtmlSliderResponse,
+        stimulus: '<p>How many years of formal musical training (lessons, classes, etc.) have you had?</p>',
+        labels: ['0<br>No musical training', '', '2', '', '4', '', '6', '', '8', '', '10+'],
+        min: 0,
+        max: 10,
+        slider_start: 0,
+        step: 1,
+        slider_width: 500,
+        require_movement: true,
+        data: { study_phase: "exit_survey", question: "musical_experience" }
+    };
 
-    const goodbye = {
-        type: jsPsychHtmlButtonResponse,
-        stimulus: '<div style="padding: 0 100px;"><p>You\'ve completed all the tasks. Press <i>Finish</i> to complete the study and return to Prolific to get paid.</p></div>',
-        choices: ['Finish'],
-        on_load: function () {
-            const buttons = document.querySelectorAll('.jspsych-btn');
-            buttons.forEach(btn => btn.disabled = true);
-            setTimeout(function () {
-                buttons.forEach(btn => btn.disabled = false);
-            }, 1000);
-        }
-    }
-    timeline.push(goodbye);
+    timeline.push(exitSurvey1, exitSurvey2, exitSurvey3, exitSurvey4, musicalExperience);
+    //#endregion
 
     jsPsych.run(timeline);
 }
