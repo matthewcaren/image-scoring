@@ -1,5 +1,3 @@
-const { on } = require("npm");
-
 const studyInstructions = {
     referential: {
         intro1: '<div style="padding: 0 100px;"><img src="img/diagram-referential.png" style="max-width: 50%;"><p>Imagine you are a sound effect designer!</p><p>You\'ll be shown a few short video clips. Your goal is to create a matching sound effect for each one.</p></div>',
