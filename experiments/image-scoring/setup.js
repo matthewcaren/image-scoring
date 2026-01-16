@@ -142,7 +142,7 @@ function runStudy(stimulusFile) {
 
     const audioCheck = {
         type: jsPsychHtmlButtonResponse,
-        stimulus: '<p>Make sure your sound is on and volume is up! To confirm, listen to this clip and click the word you hear.</p><audio src="delay-spoken.wav" controls></audio>',
+        stimulus: '<p>Make sure your sound is on and volume is up! To confirm, listen to this clip and click the word you hear.</p><audio src="delay-spoken.wav" controls style="margin-bottom:10px;"></audio>',
         choices: ['explain', 'orange', 'support', 'delay', 'table', 'guitar'],
         data: { study_phase: "audio_check" },
         on_load: function() {
@@ -393,7 +393,10 @@ function runStudy(stimulusFile) {
             audio_recordings: function() {
                 const allData = jsPsych.data.get();
                 const synthTrials = allData.filter({trial_type: 'img-synth-response-anim'});
-                const trial = synthTrials.values().find(t => t.stimulus_index === correctIndex);
+                // Check for truthy audio_url to skip tutorial trials (which have null audio_url)
+                const trial = synthTrials.values().find(t => 
+                    t.stimulus_index === correctIndex && t.audio_url
+                );
                 return trial ? [trial.audio_url] : [null];
             },
             data: { study_phase: "matching_trial", trial_number: trialNum + 1 }
