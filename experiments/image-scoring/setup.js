@@ -1,3 +1,5 @@
+const { on } = require("npm");
+
 const studyInstructions = {
     referential: {
         intro1: '<div style="padding: 0 100px;"><img src="img/diagram-referential.png" style="max-width: 50%;"><p>Imagine you are a sound effect designer!</p><p>You\'ll be shown a few short video clips. Your goal is to create a matching sound effect for each one.</p></div>',
@@ -83,11 +85,7 @@ function runStudy() {
 
     const jsPsych = initJsPsych({
         on_finish: function(data) {
-            socket.emit('helloEvent', 'Experiment complete signal from client');
-            console.log("Experiment complete. Preparing to send data...");
-            console.log(data);
-            gs.session_info.send_data(data);
-            jsPsych.data.displayData();
+            // jsPsych.data.displayData();
         }
     });
 
@@ -153,7 +151,7 @@ function runStudy() {
 
     const audioCheck = {
         type: jsPsychHtmlButtonResponse,
-        stimulus: '<p>Make sure your sound is on and volume is up! To confirm, listen to this clip and click the word you hear.</p><audio src="delay-spoken.wav" controls style="margin-bottom:10px;"></audio>',
+        stimulus: '<div style="padding: 0 100px;"><p>Make sure your sound is on and volume is up! To confirm, listen to this clip and click the word you hear.</p><audio src="delay-spoken.wav" controls style="margin-bottom:10px;"></audio></div>',
         choices: ['explain', 'orange', 'support', 'delay', 'table', 'guitar'],
         data: { study_phase: "audio_check" },
         on_load: function() {
@@ -496,11 +494,42 @@ function runStudy() {
         step: 1,
         slider_width: 500,
         require_movement: true,
-        data: { study_phase: "exit_survey", question: "musical_experience" }
+        data: { study_phase: "exit_survey", question: "musical_experience" },
+        on_finish: function() {
+            console.log("Experiment complete. Preparing to send data...");
+            console.log(data);
+            gs.session_info.send_data(data);
+        }
     };
 
     timeline.push(exitSurvey1, exitSurvey2, exitSurvey3, exitSurvey4, musicalExperience);
     //#endregion
+
+    const goodbye = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: '<div style="padding: 0 100px;"><p>You\'ve reached the end! In a moment, click <i>Finish</i> to return to Prolific to get paid.</p></div>',
+        choices: ['Finish'],
+        on_start: function () {
+            // Exit fullscreen
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        },
+        on_load: function () {
+            const buttons = document.querySelectorAll('.jspsych-btn');
+            buttons.forEach(btn => btn.disabled = true);
+            setTimeout(function () {
+                buttons.forEach(btn => btn.disabled = false);
+            }, 5000);
+        }
+    };
+    timeline.push(goodbye);
 
     jsPsych.run(timeline);
 }
