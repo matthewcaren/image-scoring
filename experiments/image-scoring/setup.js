@@ -150,7 +150,7 @@ function runStudy(stimulusFile) {
             buttons.forEach(btn => btn.disabled = true);
             setTimeout(function() {
                 buttons.forEach(btn => btn.disabled = false);
-            }, 1000);
+            }, 3000);
         }
     };
 
