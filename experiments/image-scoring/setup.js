@@ -6,7 +6,7 @@ const studyInstructions = {
         intro4: '<p>Now trace over this arrow and notice what that sounds like.</p>',
         intro5: '<p>What about these arrows? What do you notice?</p>',
         intro6: '<div style="padding: 0 100px;"><p>Great! Now let\'s take a look at the different video clips you\'ll be creating sound effects for.</p></div>',
-        intro7: '<div style="padding: 0 100px;"><p>For each video clip, create a sound effect that goes with just that video clip, and not any of the other video clips.</p><p>Each sound effect should be different from the others, and it should be <b>easy to tell which video clip it goes with</b>.</p><p>At the end of the study, you’ll get a chance to hear all your sound effects again and see how easily you can match each sound effect to the video clip it originally went with!</p></div>',
+        intro7: '<div style="padding: 0 100px;"><p>For each video clip, create a sound effect that goes with just that video clip, and not any of the other video clips.</p><p>Each sound effect should be different from the others, and it should be <b>easy for someone else to tell which of these video clips it goes with</b>.</p><p>At the end of the study, you’ll get a chance to hear all your sound effects again and see how easily you can match each sound effect to the video clip it originally went with!</p></div>',
         gridTitle: 'Here are the 9 video clips you will see today.',
         gridPrompt: 'You will make sounds for them one at a time.',
         previewPrompt: 'This is the clip you\'re about to make a sound for.',
@@ -23,7 +23,7 @@ const studyInstructions = {
         intro4: '<p>Now trace over this arrow and notice what that sounds like.</p>',
         intro5: '<p>What about these arrows? What do you notice?</p>',
         intro6: '<div style="padding: 0 100px;"><p>Great! Now let\'s take a look at the different video clips you\'ll be creating sound effects for.</p></div>',
-        intro7: '<div style="padding: 0 100px;"><p>For each video clip, create a sound effect that you think is pleasing to listen to. Each sound effect should be different from the others, and it should be easy to tell which video clip it was supposed to go with.</p><p>But above all, <b>create sounds that you like</b>.</p><p>At the end of the study, you\'ll get a chance to hear all your sound effects again and tell us which ones were your favorites!</p></div>',
+        intro7: '<div style="padding: 0 100px;"><p>For each video clip, create a sound effect that you think is pleasing to listen to. Each sound effect should be different from the others, and it should be easy for someone else to tell which of these video clips it was supposed to go with.</p><p>But above all, <b>create sounds that you like</b>.</p><p>At the end of the study, you\'ll get a chance to hear all your sound effects again and tell us which ones were your favorites!</p></div>',
         gridTitle: 'Here are the 9 video clips you will see today.',
         gridPrompt: 'You will make sounds for them one at a time.',
         previewPrompt: 'This is the clip you\'re about to make a sound for.',
@@ -129,8 +129,13 @@ function runStudy(stimulusFile) {
 
     //#region STUDY TIMELINE
 
-    // Define the stimulus indices for the batch
-    const stimulusIndices = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+    // Shuffle order of the 3 rows of stimulus indices, and the order of the clips within the rows
+    let stimulusIndices = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+    const row1 = stimulusIndices.slice(0, 3).sort(() => Math.random() - 0.5);
+    const row2 = stimulusIndices.slice(3, 6).sort(() => Math.random() - 0.5);
+    const row3 = stimulusIndices.slice(6, 9).sort(() => Math.random() - 0.5);
+    const shuffledRows = [row1, row2, row3].sort(() => Math.random() - 0.5);
+    stimulusIndices = [].concat(...shuffledRows);
 
     // Get instruction text based on condition
     const instructions = studyInstructions[condition];

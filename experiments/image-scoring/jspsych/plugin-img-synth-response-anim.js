@@ -99,6 +99,18 @@ var jsPsychImgSynthResponseAnim = (function (jspsych) {
       audio_url: {
         type: jspsych.ParameterType.STRING,
       },
+      /** The attribute that changes over the animation (color, aspect, or irregularity) */
+      animated_attribute: {
+        type: jspsych.ParameterType.STRING,
+      },
+      /** Tuple of [start_value, end_value] for the animated attribute */
+      animated_attribute_vals: {
+        type: jspsych.ParameterType.COMPLEX,
+      },
+      /** Dictionary of non-animated attributes and their constant values */
+      non_animated_attributes: {
+        type: jspsych.ParameterType.COMPLEX,
+      },
     },
   };
 
@@ -605,7 +617,12 @@ var jsPsychImgSynthResponseAnim = (function (jspsych) {
       // Retry recording
       const retryRecording = () => {
         if (currentPerformance) {
-          performances.push(currentPerformance);
+          // Only push interactions and metadata, not audio
+          performances.push({
+            interactions: currentPerformance.interactions,
+            duration: currentPerformance.duration,
+            timestamp: currentPerformance.timestamp
+          });
           currentPerformance = null;
         }
         
@@ -1363,6 +1380,52 @@ var jsPsychImgSynthResponseAnim = (function (jspsych) {
         const audioBlob = lastPerformance ? lastPerformance.audioBlob : null;
         const audioURL = lastPerformance ? lastPerformance.audioURL : null;
 
+        // Determine animated and non-animated attributes
+        let animatedAttribute = null;
+        let animatedAttributeVals = null;
+        let nonAnimatedAttributes = {};
+        
+        if (animationData) {
+          const start = animationData.start_state;
+          const end = animationData.end_state;
+          
+          // Check which attributes changed
+          const colorChanged = start.color !== end.color;
+          const aspectChanged = start.aspect_ratio !== end.aspect_ratio;
+          const irregularityChanged = start.irregularity !== end.irregularity;
+          
+          // Determine the animated attribute (assuming only one changes)
+          if (colorChanged) {
+            animatedAttribute = 'color';
+            animatedAttributeVals = [start.color, end.color];
+            nonAnimatedAttributes = {
+              aspect_ratio: start.aspect_ratio,
+              irregularity: start.irregularity
+            };
+          } else if (aspectChanged) {
+            animatedAttribute = 'aspect';
+            animatedAttributeVals = [start.aspect_ratio, end.aspect_ratio];
+            nonAnimatedAttributes = {
+              color: start.color,
+              irregularity: start.irregularity
+            };
+          } else if (irregularityChanged) {
+            animatedAttribute = 'irregularity';
+            animatedAttributeVals = [start.irregularity, end.irregularity];
+            nonAnimatedAttributes = {
+              color: start.color,
+              aspect_ratio: start.aspect_ratio
+            };
+          } else {
+            // No attributes changed
+            nonAnimatedAttributes = {
+              color: start.color,
+              aspect_ratio: start.aspect_ratio,
+              irregularity: start.irregularity
+            };
+          }
+        }
+
         // Gather trial data
         const trialData = {
           rt: performance.now() - startTime,
@@ -1372,7 +1435,10 @@ var jsPsychImgSynthResponseAnim = (function (jspsych) {
           animation_data: animationData,
           performances: performances,
           audio_blob: audioBlob,
-          audio_url: audioURL
+          audio_url: audioURL,
+          animated_attribute: animatedAttribute,
+          animated_attribute_vals: animatedAttributeVals,
+          non_animated_attributes: nonAnimatedAttributes
         };
 
         this.jsPsych.finishTrial(trialData);

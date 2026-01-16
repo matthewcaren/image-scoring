@@ -10,9 +10,9 @@ var jsPsychAnimationMatching = (function (jspsych) {
         type: jspsych.ParameterType.STRING,
         default: null,
       },
-      /** Audio URL to play */
-      audio_url: {
-        type: jspsych.ParameterType.STRING,
+      /** Array of audio recordings to play back. Each element should be an audio URL */
+      audio_recordings: {
+        type: jspsych.ParameterType.COMPLEX,
         default: null,
       },
       /** Index of the correct stimulus */
@@ -380,60 +380,37 @@ var jsPsychAnimationMatching = (function (jspsych) {
           audioElement.pause();
         }
         
-        // Attempt to get audio URL with retries, querying data store fresh each time
-        const attemptPlayAudio = (retryCount = 0, maxRetries = 3) => {
-          // Re-query the data store to get the audio URL
-          // This works around the issue where jsPsych evaluates function parameters
-          // at trial initialization, but the data may not be saved yet at that time
-          let audioUrl;
-          
-          if (typeof trial.audio_url === 'function') {
-            // Re-evaluate the function to get fresh data
-            audioUrl = trial.audio_url();
-          } else {
-            // It's already a string (or null)
-            audioUrl = trial.audio_url;
-          }
-          
-          // Validate that we have a valid audio URL
-          if (!audioUrl) {
-            if (retryCount < maxRetries) {
-              // Retry after a delay - the previous trial's data may still be saving
-              console.warn(`Audio URL not available (attempt ${retryCount + 1}/${maxRetries}), retrying in 300ms...`);
-              setTimeout(() => attemptPlayAudio(retryCount + 1, maxRetries), 300);
-              return;
-            } else {
-              playBtn.disabled = false;
-              playBtn.textContent = 'Play Sound';
-              console.error('Error: Audio URL still not available after retries. The audio may not have been recorded.');
-              alert('Audio not available. This may occur if the previous trial did not save properly.');
-              return;
-            }
-          }
-          
-          // Successfully got audio URL, now play it
-          playBtn.textContent = 'Playing...';
-          audioElement = new Audio(audioUrl);
-          
-          audioElement.onended = () => {
-            playBtn.disabled = false;
-            playBtn.textContent = 'Play Sound';
-          };
-          
-          audioElement.onerror = (err) => {
-            playBtn.disabled = false;
-            playBtn.textContent = 'Play Sound';
-            console.error('Error playing audio from:', audioUrl, err);
-          };
-          
-          audioElement.play().catch(err => {
-            playBtn.disabled = false;
-            playBtn.textContent = 'Play Sound';
-            console.error('Failed to play audio:', err);
-          });
+        // Get audio URL from recordings (using first index as the trial audio)
+        const audioUrl = trial.audio_recordings ? trial.audio_recordings[0] : null;
+        
+        if (!audioUrl) {
+          playBtn.disabled = false;
+          playBtn.textContent = 'Play Sound';
+          console.error('Error: Audio URL not available');
+          alert('Audio not available.');
+          return;
+        }
+        
+        // Successfully got audio URL, now play it
+        playBtn.textContent = 'Playing...';
+        audioElement = new Audio(audioUrl);
+        
+        audioElement.onended = () => {
+          playBtn.disabled = false;
+          playBtn.textContent = 'Play Sound';
         };
         
-        attemptPlayAudio();
+        audioElement.onerror = (err) => {
+          playBtn.disabled = false;
+          playBtn.textContent = 'Play Sound';
+          console.error('Error playing audio from:', audioUrl, err);
+        };
+        
+        audioElement.play().catch(err => {
+          playBtn.disabled = false;
+          playBtn.textContent = 'Play Sound';
+          console.error('Failed to play audio:', err);
+        });
       };
 
       const selectClip = (stimulusIndex) => {
