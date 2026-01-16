@@ -141,9 +141,9 @@ function runStudy(stimulusFile) {
     const instructions = studyInstructions[condition];
 
     const audioCheck = {
-        type: jsPsychAudioButtonResponse,
+        type: jsPsychHtmlButtonResponse,
         stimulus: 'delay-spoken.wav',
-        prompt: '<p>Make sure your sound is on and volume is up! To confirm, listen to this clip and click the word you hear.</p>',
+        prompt: '<p>Make sure your sound is on and volume is up! To confirm, listen to this clip and click the word you hear.</p><audio src="audio/delay-spoken.wav" controls></audio>',
         choices: ['explain', 'orange', 'support', 'delay', 'table', 'guitar'],
         data: { study_phase: "audio_check" },
         on_load: function() {
