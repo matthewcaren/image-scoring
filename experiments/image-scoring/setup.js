@@ -255,6 +255,7 @@ function runStudy() {
     timeline.push({
         type: jsPsychAnimationGridPreview,
         stimulus_json: stimulusFile,
+        stimulus_indices: stimulusIndices,
         highlight_index: null,
         title: instructions.gridTitle,
         prompt: instructions.gridPrompt,
@@ -295,6 +296,7 @@ function runStudy() {
         timeline.push({
             type: jsPsychAnimationGridPreview,
             stimulus_json: stimulusFile,
+            stimulus_indices: stimulusIndices,
             highlight_index: index,
             title: `Clip ${i + 1} of ${stimulusIndices.length}`,
             prompt: instructions.previewPrompt,
@@ -337,6 +339,7 @@ function runStudy() {
     timeline.push({
         type: jsPsychAnimationGridPreview,
         stimulus_json: stimulusFile,
+        stimulus_indices: stimulusIndices,
         highlight_index: null,
         title: 'Review Your Sounds',
         prompt: '<p>Click each clip to hear the sound you made for it. Select the two sounds you like most!</p>',
