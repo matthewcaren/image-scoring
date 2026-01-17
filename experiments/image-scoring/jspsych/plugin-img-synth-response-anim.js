@@ -79,10 +79,6 @@ var jsPsychImgSynthResponseAnim = (function (jspsych) {
       stimulus_index: {
         type: jspsych.ParameterType.INT,
       },
-      /** The synth type used */
-      synth_type: {
-        type: jspsych.ParameterType.STRING,
-      },
       /** Response time (trial duration) */
       rt: {
         type: jspsych.ParameterType.INT,
@@ -462,49 +458,6 @@ var jsPsychImgSynthResponseAnim = (function (jspsych) {
           if (currentPerformance) {
             currentPerformance.audioBlob = audioBlob;
             currentPerformance.audioURL = recordedAudioURL;
-
-            // // AUDIO STORAGE: convert audio blob to a list of audio samples at 48kHz, 16 bit, and store it as a hex string
-            // const reader = new FileReader();
-            // reader.onload = async () => {
-            //   const arrayBuffer = reader.result;
-            //   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            //   const decodedAudio = await audioCtx.decodeAudioData(arrayBuffer);
-              
-            //   // Resample to 48kHz if needed and convert to 16-bit PCM
-            //   const sampleRate = 48000;
-            //   const numChannels = decodedAudio.numberOfChannels;
-            //   const length = Math.ceil(decodedAudio.duration * sampleRate);
-              
-            //   // Use first channel only (mono)
-            //   const channelData = decodedAudio.getChannelData(0);
-            //   const samples = new Int16Array(length);
-              
-            //   // Resample and convert to 16-bit
-            //   for (let i = 0; i < length; i++) {
-            //     const srcIndex = (i / sampleRate) * decodedAudio.sampleRate;
-            //     const srcIndexFloor = Math.floor(srcIndex);
-            //     const srcIndexCeil = Math.min(srcIndexFloor + 1, channelData.length - 1);
-            //     const fraction = srcIndex - srcIndexFloor;
-                
-            //     // Linear interpolation
-            //     const sample = channelData[srcIndexFloor] * (1 - fraction) + channelData[srcIndexCeil] * fraction;
-                
-            //     // Convert float (-1 to 1) to 16-bit int (-32768 to 32767)
-            //     samples[i] = Math.max(-32768, Math.min(32767, Math.floor(sample * 32767)));
-            //   }
-              
-            //   // Convert to hex string
-            //   let hexString = '';
-            //   for (let i = 0; i < samples.length; i++) {
-            //     const byte1 = samples[i] & 0xFF;
-            //     const byte2 = (samples[i] >> 8) & 0xFF;
-            //     hexString += byte1.toString(16).padStart(2, '0') + byte2.toString(16).padStart(2, '0');
-            //   }
-              
-            //   currentPerformance.audioSamples = hexString;
-            //   audioCtx.close();
-            // };
-            // reader.readAsArrayBuffer(audioBlob);
           }
         };
         
@@ -1431,7 +1384,6 @@ var jsPsychImgSynthResponseAnim = (function (jspsych) {
           rt: performance.now() - startTime,
           stimulus_json: trial.stimulus_json,
           stimulus_index: trial.stimulus_index,
-          synth_type: trial.synth_type,
           animation_data: animationData,
           performances: performances,
           audio_blob: audioBlob,

@@ -102,7 +102,7 @@ function runStudy() {
 
             // Redirect to Prolific
             window.onbeforeunload = null;
-            window.open("https://example.com/", "_self");
+            window.open("https://app.prolific.com/submissions/complete?cc=CLF8SUI4", "_self");
         }
     });
 

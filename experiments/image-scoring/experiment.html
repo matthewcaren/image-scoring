@@ -27,23 +27,5 @@
     runStudy();
 </script>
 
-<!-- load experiment-specific helper functions -->
-<!-- <script type="module">
-    window.addEventListener("load", async () => {
-        try {
-            // prevent right-clicking unless debugMode is explicitly true
-            if (!config.devMode) {
-                document.addEventListener('contextmenu', event => event.preventDefault());
-            }
-
-            const { setupExperiment } = await import('./js/setup.js');
-            setupExperiment(config);
-
-        } catch (error) {
-            console.error("Failed to load experiment:", error);
-            document.body.innerHTML = '<p>Error loading experiment. Please check the console for details.</p>';
-        }
-    });
-</script> -->
 </body>
 </html>
