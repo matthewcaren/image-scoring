@@ -6,7 +6,7 @@ const studyInstructions = {
         intro4: '<p>Now trace over this arrow and notice what that sounds like.</p>',
         intro5: '<p>What about these arrows? What do you notice?</p>',
         intro6: '<div style="padding: 0 100px;"><p>Great! Now let\'s take a look at the different video clips you\'ll be creating sound effects for.</p></div>',
-        intro7: '<div style="padding: 0 100px;"><p>For each video clip, create a sound effect that goes with just that video clip, and not any of the other video clips.</p><p>Each sound effect should be different from the others, and it should be <b>easy for someone else to tell which of these video clips it goes with</b>.</p><p>At the end of the study, you’ll get a chance to hear all your sound effects again and see how easily you can match each sound effect to the video clip it originally went with!</p></div>',
+        intro7: '<div style="padding: 0 100px;"><p>For each clip, create a sound effect that goes with just that video clip, and not any of the other clips.</p><p>Each sound effect should be different from the others, and it should be <b>easy for someone else to tell which of these video clips it goes with</b>.</p><p>At the end of the study, you’ll get a chance to hear all your sound effects again and see how easily you can match each sound effect to the video clip it originally went with!</p></div>',
         gridTitle: 'Here are the 9 video clips you will see today.',
         gridPrompt: 'You will make sounds for them one at a time.',
         previewPrompt: 'This is the clip you\'re about to make a sound for.',
@@ -17,13 +17,13 @@ const studyInstructions = {
         matchingPrompt: '<p>Listen to the sound, then click on the clip it was made for.</p>'
     },
     musical: {
-        intro1: '<div style="padding: 0 100px;"><img src="img/diagram-musical.png" style="max-width: 50%;"><p>Imagine you are a sound effect designer!</p><p>You\'ll be shown a few short video clips. Your goal is to create a pleasing sound effect for each one.</p></div>',
+        intro1: '<div style="padding: 0 100px;"><img src="img/diagram-musical.png" style="max-width: 50%;"><p>Imagine you are a sound effect designer!</p><p>You\'ll be shown a few short video clips. Your goal is to create a <b>pleasing sound effect</b> for each one.</p></div>',
         intro2: '<p>We\'ve provided you with a tool you can use to make a variety of sounds. To make sound, click and drag inside the panel below. That\'s it!</p><p>Drag your mouse to different places to make different sounds. Once you\'ve had a chance to play around with this tool, click "Next" to continue.</p>',
         intro3: '<p>Now, let\'s see exactly how this tool works by making a few specific sounds.</p><p>Trace the arrow below and pay attention to what it sounds like.</p>',
         intro4: '<p>Now trace over this arrow and notice what that sounds like.</p>',
         intro5: '<p>What about these arrows? What do you notice?</p>',
         intro6: '<div style="padding: 0 100px;"><p>Great! Now let\'s take a look at the different video clips you\'ll be creating sound effects for.</p></div>',
-        intro7: '<div style="padding: 0 100px;"><p>For each video clip, create a sound effect that you think is pleasing to listen to. Each sound effect should be different from the others, and it should be easy for someone else to tell which of these video clips it was supposed to go with.</p><p>But above all, <b>create sounds that you like</b>.</p><p>At the end of the study, you\'ll get a chance to hear all your sound effects again and tell us which ones were your favorites!</p></div>',
+        intro7: '<div style="padding: 0 100px;"><p>For each clip, create a sound effect that you think is pleasing to listen to. Each sound effect should be different from the others, and it should be easy for someone else to tell which of these video clips it was supposed to go with.</p><p>But above all, <b>create sounds that you like</b>.</p><p>At the end of the study, you\'ll get a chance to hear all your sound effects again and tell us which ones were your favorites!</p></div>',
         gridTitle: 'Here are the 9 video clips you will see today.',
         gridPrompt: 'You will make sounds for them one at a time.',
         previewPrompt: 'This is the clip you\'re about to make a sound for.',
@@ -471,7 +471,7 @@ function runStudy() {
     //#region EXIT SURVEY
     const exitSurvey1 = {
         type: jsPsychHtmlSliderResponse,
-        stimulus: '<p>How enjoyable did you find the task?</p>',
+        stimulus: '<p>How enjoyable or fun did you find the task?</p>',
         labels: ['1<br>Not at all', '2', '3', '4', '5', '6', '7', '8', '9', '10<br>Very much'],
         min: 1,
         max: 10,
