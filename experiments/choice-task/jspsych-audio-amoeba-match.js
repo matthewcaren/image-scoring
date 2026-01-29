@@ -48,6 +48,7 @@ var jsPsychAudioAmoebaMatch = (function (jspsych) {
       let audioUrl = null;
       let audioElement = null;
       let animationControllers = [];
+      let hasPlayedAudio = false; // Track if audio has been played
 
       // Create audio blob from buffer data
       const uint8Array = new Uint8Array(trial.audio.data);
@@ -66,12 +67,13 @@ var jsPsychAudioAmoebaMatch = (function (jspsych) {
           <div style="text-align: center; margin-bottom: 40px;">
             <button id="play-audio-btn" style="
               padding: 15px 40px;
-              font-size: 20px;
-              background-color:rgb(64, 64, 64);
+              font-size: 16px;
+              background-color:rgb(67, 67, 67);
               color: white;
               border: none;
-              border-radius: 10px;
+              border-radius: 8px;
               cursor: pointer;
+              box-shadow: 0 4px 6px rgba(0,0,0,0.1);
               transition: background-color 0.3s;
             ">
               ▶ Play Audio
@@ -79,12 +81,34 @@ var jsPsychAudioAmoebaMatch = (function (jspsych) {
           </div>
           
           <!-- Animation grid -->
-          <div id="animation-grid" style="
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 30px;
-          ">
+          <div style="position: relative;">
+            <div id="animation-grid" style="
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: 15px;
+              margin-bottom: 30px;
+            ">
+            </div>
+            
+            <!-- Overlay that blocks animations until audio is played -->
+            <div id="animation-overlay" style="
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background-color: rgba(128, 128, 128, 0.9);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 18px;
+              color: white;
+              font-weight: bold;
+              text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+              pointer-events: none;
+            ">
+             
+            </div>
           </div>
           
           <!-- Next button -->
@@ -92,6 +116,7 @@ var jsPsychAudioAmoebaMatch = (function (jspsych) {
             <button id="next-btn" disabled style="
               padding: 12px 30px;
               font-size: 16px;
+              background-color: #ccc;
               color: white;
               border: none;
               border-radius: 8px;
@@ -104,6 +129,70 @@ var jsPsychAudioAmoebaMatch = (function (jspsych) {
       `;
 
       display_element.innerHTML = html;
+
+      // Helper function to draw a static amoeba (used before animation starts)
+      const drawStaticAmoeba = (ctx, centerX, centerY, params, canvasSize) => {
+        const AMOEBA_BASE_RADIUS = 120;
+        const BUMP_FREQUENCY = 10;
+        const BUMP_MAX_AMPLITUDE = 0.3;
+        
+        const { color, aspect_ratio, irregularity } = params;
+        const baseRadius = AMOEBA_BASE_RADIUS;
+        const numPoints = 128;
+        
+        // Parse color
+        const parseColor = (colorStr) => {
+          const colors = {
+            'red': [255, 0, 0],
+            'green': [0, 255, 0],
+            'blue': [0, 0, 255],
+            'yellow': [255, 255, 0],
+            'purple': [128, 0, 128],
+            'orange': [255, 165, 0],
+            'cyan': [0, 255, 255],
+            'magenta': [255, 0, 255]
+          };
+          return colors[colorStr.toLowerCase()] || [128, 128, 128];
+        };
+        
+        ctx.clearRect(0, 0, canvasSize, canvasSize);
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.scale(aspect_ratio, 1.0);
+        
+        ctx.beginPath();
+        
+        for (let i = 0; i <= numPoints; i++) {
+          const angle = (i / numPoints) * Math.PI * 2;
+          let radius = baseRadius;
+          
+          if (irregularity > 0) {
+            const noiseAmount = irregularity * baseRadius * BUMP_MAX_AMPLITUDE;
+            const noise1 = Math.sin(angle * BUMP_FREQUENCY * 0.3);
+            const noise2 = Math.sin(angle * BUMP_FREQUENCY * 0.7 + 1.2) * 0.6;
+            const noise3 = Math.sin(angle * BUMP_FREQUENCY * 1.3 + 2.4) * 0.2;
+            const noise = noise1 + noise2 + noise3;
+            radius += noise * noiseAmount;
+          }
+          
+          const x = Math.cos(angle) * radius;
+          const y = Math.sin(angle) * radius;
+          
+          if (i === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        }
+        
+        ctx.closePath();
+        
+        const rgb = Array.isArray(color) ? color : parseColor(color);
+        ctx.fillStyle = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+        ctx.fill();
+        
+        ctx.restore();
+      };
 
       // Create audio element
       audioElement = new Audio(audioUrl);
@@ -131,17 +220,32 @@ var jsPsychAudioAmoebaMatch = (function (jspsych) {
       audioProgressContainer.appendChild(audioProgressBar);
       playBtn.parentElement.appendChild(audioProgressContainer);
 
-      // Update progress bar during playback
-      audioElement.addEventListener('timeupdate', () => {
+       // Update progress bar during playback
+       audioElement.addEventListener('timeupdate', () => {
         if (audioElement.duration) {
           const progress = (audioElement.currentTime / audioElement.duration) * 100;
           audioProgressBar.style.width = progress + '%';
         }
       });
 
-      // Reset progress bar when audio ends
+      // Reset progress bar when audio ends and remove overlay on first complete playback
       audioElement.addEventListener('ended', () => {
         audioProgressBar.style.width = '100%';
+        
+        // On first complete playback, remove overlay and start animations
+        if (!hasPlayedAudio) {
+          hasPlayedAudio = true;
+          const overlay = display_element.querySelector('#animation-overlay');
+          overlay.style.display = 'none';
+          
+          // Start all animations
+          animationControllers.forEach((controller, index) => {
+            if (controller && controller.start) {
+              controller.start();
+            }
+          });
+        }
+        
         setTimeout(() => {
           audioProgressBar.style.width = '0%';
         }, 500);
@@ -153,6 +257,7 @@ var jsPsychAudioAmoebaMatch = (function (jspsych) {
         audioProgressBar.style.width = '0%';
         audioElement.play();
       });
+
 
       // Create animation grid
       const grid = display_element.querySelector('#animation-grid');
@@ -181,19 +286,31 @@ var jsPsychAudioAmoebaMatch = (function (jspsych) {
         container.appendChild(canvas);
         grid.appendChild(container);
 
-        // Start animation
+        // Draw initial static frame (first frame of animation)
+        const ctx = canvas.getContext('2d');
+        const initialParams = {
+          color: choice.start_state.color,
+          aspect_ratio: choice.start_state.aspect_ratio,
+          irregularity: choice.start_state.irregularity
+        };
+        drawStaticAmoeba(ctx, canvas.width / 2, canvas.height / 2, initialParams, canvas.width);
+
+        // Start animation (paused initially)
         const animData = {
           start_state: choice.start_state,
           end_state: choice.end_state,
           anim_length: trial.anim_length
         };
         
+        let currentController = null;
+        let isStarted = false;
+        
         const startAnimation = () => {
           const controller = renderAmoebaClip(JSON.stringify(animData), canvas);
           
           // Restart animation after it completes
           setTimeout(() => {
-            if (animationControllers[index]) {
+            if (animationControllers[index] && isStarted) {
               controller.stop();
               startAnimation();
             }
@@ -202,8 +319,23 @@ var jsPsychAudioAmoebaMatch = (function (jspsych) {
           return controller;
         };
         
-        const controller = startAnimation();
-        animationControllers.push(controller);
+        // Create controller object with start method
+        const controllerWrapper = {
+          start: () => {
+            if (!isStarted) {
+              isStarted = true;
+              currentController = startAnimation();
+            }
+          },
+          stop: () => {
+            isStarted = false;
+            if (currentController && currentController.stop) {
+              currentController.stop();
+            }
+          }
+        };
+        
+        animationControllers.push(controllerWrapper);
 
         // Click handler
         container.addEventListener('click', () => {
@@ -218,7 +350,7 @@ var jsPsychAudioAmoebaMatch = (function (jspsych) {
           // Enable next button
           const nextBtn = display_element.querySelector('#next-btn');
           nextBtn.disabled = false;
-          nextBtn.style.backgroundColor = 'rgb(64, 64, 64)';
+          nextBtn.style.backgroundColor = 'rgb(67, 67, 67)';
           nextBtn.style.cursor = 'pointer';
         });
       });
