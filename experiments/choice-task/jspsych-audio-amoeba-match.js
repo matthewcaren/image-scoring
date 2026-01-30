@@ -57,7 +57,7 @@ var jsPsychAudioAmoebaMatch = (function (jspsych) {
 
       // Build HTML
       let html = `
-        <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="max-width: 520px; margin: 0 auto; padding: 20px;">
           <!-- Prompt -->
           <div style="text-align: center; margin-bottom: 20px; font-size: 18px;">
             ${trial.prompt}
