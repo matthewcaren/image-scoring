@@ -48,8 +48,6 @@
         }
         
         // Get participant ID (0-15)
-        const urlParams = new URLSearchParams(window.location.search);
-        // let participantID = 12;
         let participantID = urlParams.get('participant_id');
         participantID = parseInt(participantID);
         if (participantID === null) {
