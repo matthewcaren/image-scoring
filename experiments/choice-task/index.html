@@ -207,7 +207,7 @@
                     buttons.forEach(btn => btn.disabled = true);
                     setTimeout(function () {
                         buttons.forEach(btn => btn.disabled = false);
-                    }, 2000);
+                    }, 3000);
                 }
             };
             const audioCheckLoop = {
@@ -220,7 +220,7 @@
             
             const instructions =  {
                 intro1: '<div style="padding: 0 100px;"><p>In this study, you will listen to a series of sound effects. Each sound effect was designed by someone else to accompany a brief video clip.</p><p>Your task is to guess which video clip the sound-creator was looking at when they made their audio clip.</p></div>',
-                intro2: '<div style="padding: 0 100px;"><p>That sound effect designer was trying to make sure that each sound effect went with only one of nine video clips, each showing a colorful shape changing over time.</p><img src = "example_match.png" style="max-width: 25%; border: 2px solid black;"></div>',
+                intro2: '<div style="padding: 0 100px;"><p>The sound effect designer was trying to make sure that each sound effect went with only one of nine video clips, each showing a colorful shape changing over time.</p><img src = "example_match.png" style="max-width: 25%; border: 2px solid black;"></div>',
                 intro3: '<div style="padding: 0 100px;"><p>Great job! Now you are going to complete several of these trials. </p>'
             }
                     
@@ -306,7 +306,7 @@
                     post_trial_gap: 1500,
                     anim_length: 3000,
                     canvas_size: 120,
-                    prompt: 'Which video clip best matches this sound effect? (If you\'re not sure, please just give your best guess!)\n(Trial ' + (presentationOrder + 1) + ' of ' + shuffledTrials.length + ')',
+                    prompt: 'Which video clip best matches this sound effect?\nIf you\'re not sure, just give your best guess!\n(Trial ' + (presentationOrder + 1) + ' of ' + shuffledTrials.length + ')',
                     data: {
                         participant_id: participantID,
                         original_trial_index: originalTrialIndex,
