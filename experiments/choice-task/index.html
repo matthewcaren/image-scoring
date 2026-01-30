@@ -36,7 +36,6 @@
         'G-referential.json',
         'H-musical.json',   
         'H-referential.json'
-        
         ];
 
         let socket = io.connect();
@@ -220,8 +219,8 @@
             timeline.push(audioCheckLoop);
             
             const instructions =  {
-                intro1: '<div style="padding: 0 100px;"><p>In this study, you will match sound effects to short video clips. Each audio clip was made by a person to match <i>just one</i> of the nine clips.</p><p>Your task is to guess which video clip the sound-creator was looking at when they made their audio clip.</p></div>',
-                intro2: '<div style="padding: 0 100px;"><p>For each sound, you\'ll see a screen like the one below.First, listen to the audio clip as many times as you need by clicking the "Play Audio" button. <b>Watch each video closely and think about which one best matches the audio clip</b>. When you are ready to choose a video clip, click on it with your mouse and press the "Next" button to continue.</p><img src = "example_match.png" style="max-width: 40%; border: 2px solid black;"></div>',
+                intro1: '<div style="padding: 0 100px;"><p>In this study, you will listen to a series of sound effects. Each sound effect was designed by someone else to accompany a brief video clip.</p><p>Your task is to guess which video clip the sound-creator was looking at when they made their audio clip.</p></div>',
+                intro2: '<div style="padding: 0 100px;"><p>That sound effect designer was trying to make sure that each sound effect went with only one of nine video clips, each showing a colorful shape changing over time.</p><img src = "example_match.png" style="max-width: 25%; border: 2px solid black;"></div>',
                 intro3: '<div style="padding: 0 100px;"><p>Great job! Now you are going to complete several of these trials. </p>'
             }
                     
@@ -248,7 +247,7 @@
                 choices: demoTrial.choices,
                 anim_length: 3000,
                 canvas_size: 120,
-                prompt: 'Which clips best matches the sound? (This is a practice trial.)',
+                prompt: 'Which video clip best matches this sound effect? (This is a practice trial.)',
                 data: {
                     participant_id: participantID,
                     demoTrial: true
@@ -307,7 +306,7 @@
                     post_trial_gap: 1500,
                     anim_length: 3000,
                     canvas_size: 120,
-                    prompt: 'Which clips best matches the sound? (Trial ' + (presentationOrder + 1) + ' of ' + shuffledTrials.length + ')',
+                    prompt: 'Which video clip best matches this sound effect? (If you\'re not sure, please just give your best guess!)\n(Trial ' + (presentationOrder + 1) + ' of ' + shuffledTrials.length + ')',
                     data: {
                         participant_id: participantID,
                         original_trial_index: originalTrialIndex,
