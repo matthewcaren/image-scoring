@@ -2,7 +2,7 @@ function renderAmoebaClip(jsonString, canvas) {
     const animationData = JSON.parse(jsonString);
     const ctx = canvas.getContext('2d');
     
-    const AMOEBA_BASE_RADIUS = 50;
+    const AMOEBA_BASE_RADIUS = 40;
     const BUMP_FREQUENCY = 10;
     const BUMP_MAX_AMPLITUDE = 0.3;
     

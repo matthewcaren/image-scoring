@@ -164,7 +164,6 @@
                 masterGridShuffle.push(row * 3, row * 3 + 1, row * 3 + 2);
             });
 
-            
             // CONSENT FORM
             const consent = {
                 type: jsPsychHtmlButtonResponse,
@@ -220,8 +219,7 @@
                 intro1: '<div style="padding: 0 100px;"><p>In this study, you will first be asked to listen to a short audio clip and then shown a set of nine video clips. Each audio clip you will be presented with was made by a person to best match one of the nine video clips. Your task is to guess which video clip they were looking at when they made their audio clip.</p></div>',
                 intro2: '<div style="padding: 0 100px;"><p>On each trial, you will see a screen similar to the one below. You will first have to play the audio clip, after which the nine video clips will start playing on loop. You can listen to the audio clip as many times as you need by clicking the "Play Audio" button. <b>Watch each video closely and think about which one best matches the audio clip</b>. When you are ready to choose a video clip, select it with your mouse and press the "Next" button that appears to continue. </p> <img src = "example_match.png" style="max-width: 40%; border: 2px solid black;"></img> \
                 <p> On the next page, you will get to test what a trial might look like. When you are ready, click on "Continue"</p></div>',
-                intro3: '<div style="padding: 0 100px;"><p>Great job! Now you are going to complete several of these trials. </p>',
-                    
+                intro3: '<div style="padding: 0 100px;"><p>Great job! Now you are going to complete several of these trials. </p>'
             }
                     
             const intro1 = {
@@ -319,6 +317,7 @@
                     on_finish: function(data) {
                         // Add whether the participant selected the correct answer
                         data.correct = (data.selected_choice === data.correct_answer_position);
+                        gs.session_info.send_data(data);
                     }
                 };
                 timeline.push(trial);
@@ -337,7 +336,6 @@
                 data: { study_phase: "exit_survey", question: "musical_experience" },
                 on_finish: function (data) {
                     gs.session_info.send_data(data);
-                    gs.session_timing.exit_survey_complete = Date.now();
                 }
             };
             timeline.push(musicalExperience);
