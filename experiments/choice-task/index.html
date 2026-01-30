@@ -247,7 +247,7 @@
                 choices: demoTrial.choices,
                 anim_length: 3000,
                 canvas_size: 120,
-                prompt: 'Which video clip best matches this sound effect? (This is a practice trial.)',
+                prompt: 'Here\'s a practice trial! Which video clip best matches this sound effect?',
                 data: {
                     participant_id: participantID,
                     demoTrial: true
@@ -280,6 +280,7 @@
             const shuffledTrials = shuffleWithMapping(allTrials);
             
             // Create jsPsych trials from shuffled data
+            const halfwayIndex = Math.ceil(shuffledTrials.length / 2);
             shuffledTrials.forEach((shuffledTrial, presentationOrder) => {
                 const { trialData, originalTrialIndex, repetition } = shuffledTrial.item;
                 
@@ -323,6 +324,16 @@
                     }
                 };
                 timeline.push(trial);
+
+                // Halfway encouragement screen
+                if (presentationOrder + 1 === halfwayIndex) {
+                    const halfwayScreen = {
+                        type: jsPsychHtmlButtonResponse,
+                        stimulus: '<div style="padding: 0 100px"><p>Good work! You\'re halfway there.</p></div>',
+                        choices: ['Continue']
+                    };
+                    timeline.push(halfwayScreen);
+                }
             });
 
             const musicalExperience = {
