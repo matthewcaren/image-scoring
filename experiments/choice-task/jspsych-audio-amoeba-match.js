@@ -132,7 +132,7 @@ var jsPsychAudioAmoebaMatch = (function (jspsych) {
 
       // Helper function to draw a static amoeba (used before animation starts)
       const drawStaticAmoeba = (ctx, centerX, centerY, params, canvasSize) => {
-        const AMOEBA_BASE_RADIUS = 120;
+        const AMOEBA_BASE_RADIUS = 50;
         const BUMP_FREQUENCY = 10;
         const BUMP_MAX_AMPLITUDE = 0.3;
         

@@ -219,7 +219,7 @@
                 intro1: '<div style="padding: 0 100px;"><p>In this study, you will first be asked to listen to a short audio clip and then shown a set of nine video clips. Each audio clip you will be presented with was made by a person to best match one of the nine video clips. Your task is to guess which video clip they were looking at when they made their audio clip.</p></div>',
                 intro2: '<div style="padding: 0 100px;"><p>On each trial, you will see a screen similar to the one below. You will first have to play the audio clip, after which the nine video clips will start playing on loop. You can listen to the audio clip as many times as you need by clicking the "Play Audio" button. <b>Watch each video closely and think about which one best matches the audio clip</b>. When you are ready to choose a video clip, select it with your mouse and press the "Next" button that appears to continue. </p> <img src = "example_match.png" style="max-width: 40%; border: 2px solid black;"></img> \
                 <p> On the next page, you will get to test what a trial might look like. When you are ready, click on "Continue"</p></div>',
-                intro3: '<div style="padding: 0 100px;"><p>Great job! Now you are going to complete a couple of these trials. </p>',
+                intro3: '<div style="padding: 0 100px;"><p>Great job! Now you are going to complete several of these trials. </p>',
                     
             }
                     
@@ -246,7 +246,7 @@
                 choices: demoTrial.choices,
                 anim_length: 3000,
                 canvas_size: 120,
-                prompt: '',
+                prompt: 'Which clips best matches the sound? (This is a practice trial.)',
                 data: {
                     participant_id: participantID,
                     demoTrial: true
@@ -305,7 +305,7 @@
                     post_trial_gap: 1500,
                     anim_length: 3000,
                     canvas_size: 120,
-                    prompt: '',
+                    prompt: 'Which clips best matches the sound? (Trial ' + (presentationOrder + 1) + ' of ' + shuffledTrials.length + ')',
                     data: {
                         participant_id: participantID,
                         original_trial_index: originalTrialIndex,
@@ -323,14 +323,29 @@
                 timeline.push(trial);
             });
 
+            const musicalExperience = {
+                type: jsPsychHtmlSliderResponse,
+                stimulus: '<p>How many years of formal musical training (lessons, classes, etc.) have you had?</p>',
+                labels: ['0<br>No musical training', '', '2', '', '4', '', '6', '', '8', '', '10+'],
+                min: 0,
+                max: 10,
+                slider_start: 0,
+                step: 1,
+                slider_width: 500,
+                require_movement: true,
+                data: { study_phase: "exit_survey", question: "musical_experience" },
+                on_finish: function (data) {
+                    gs.session_info.send_data(data);
+                    gs.session_timing.exit_survey_complete = Date.now();
+                }
+            };
+            timeline.push(musicalExperience);
+
             // Thank you screen
             const thankyou = {
-                type: jsPsychHtmlKeyboardResponse,
-                stimulus: `
-                    <h1>Thank you!</h1>
-                    <p>The experiment is complete.</p>
-                    <p>Press any key to see your data.</p>
-                `
+                type: jsPsychHtmlButtonResponse,
+                stimulus: '<div style="padding: 0 100px;"><p>Thank you! You\'ve reached the end. In a moment, click <i>Finish</i> to return to Prolific.</p></div>',
+                choices: ['Finish'],
             };
             timeline.push(thankyou);
 
