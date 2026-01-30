@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Match the sounds!</title>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script src="https://unpkg.com/jspsych@7.3.4"></script>
     <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3"></script>
     <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.3"></script>
@@ -216,9 +217,8 @@
             timeline.push(audioCheckLoop);
             
             const instructions =  {
-                intro1: '<div style="padding: 0 100px;"><p>In this study, you will first be asked to listen to a short audio clip and then shown a set of nine video clips. Each audio clip you will be presented with was made by a person to best match one of the nine video clips. Your task is to guess which video clip they were looking at when they made their audio clip.</p></div>',
-                intro2: '<div style="padding: 0 100px;"><p>On each trial, you will see a screen similar to the one below. You will first have to play the audio clip, after which the nine video clips will start playing on loop. You can listen to the audio clip as many times as you need by clicking the "Play Audio" button. <b>Watch each video closely and think about which one best matches the audio clip</b>. When you are ready to choose a video clip, select it with your mouse and press the "Next" button that appears to continue. </p> <img src = "example_match.png" style="max-width: 40%; border: 2px solid black;"></img> \
-                <p> On the next page, you will get to test what a trial might look like. When you are ready, click on "Continue"</p></div>',
+                intro1: '<div style="padding: 0 100px;"><p>In this study, you will match sound effects to short video clips. Each audio clip you hear was made by a person to best match <i>just one</i> of the nine clips.</p><p>Your task is to guess which video clip the sound-creator was looking at when they made their audio clip.</p></div>',
+                intro2: '<div style="padding: 0 100px;"><p>For each sound, you\'ll see a screen like the one below.First, listen to the audio clip as many times as you need by clicking the "Play Audio" button. < b > Watch each video closely and think about which one best matches the audio clip</b>.When you are ready to choose a video clip, click on it with your mouse and press the "Next" button to continue.</p></div>',
                 intro3: '<div style="padding: 0 100px;"><p>Great job! Now you are going to complete several of these trials. </p>'
             }
                     
