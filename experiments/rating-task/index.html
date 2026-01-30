@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Audio Preference Experiment</title>
+    <script src="https://unpkg.com/jspsych@7.3.4"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.3"></script>
+    <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/@jspsych/plugin-fullscreen@1.2"></script>
+    <script src="jspsych-audio-preference.js"></script>
+</head>
+<body>
+    <script>
+        // List of condition files
+        const conditionFiles = [
+        'condition_1_trials.json',
+        'condition_2_trials.json',
+        'condition_3_trials.json',
+        'condition_4_trials.json'
+        ];
+        
+        // Get condition ID (0-3 for 4 conditions)
+        
+        conditionID = 0;
+        
+        
+        // Select the appropriate condition file
+        const selectedFile = conditionFiles[conditionID];
+        
+        // Dynamically load the selected condition file
+        const script = document.createElement('script');
+        script.src = selectedFile;
+        script.onload = function() {
+            // Run experiment after the trial data is loaded
+            runExperiment(conditionID);
+        };
+        script.onerror = function() {
+            document.body.innerHTML = `
+                <div style="text-align: center; margin-top: 50px;">
+                    <h2>Error Loading Condition File</h2>
+                    <p>Could not load: ${selectedFile}</p>
+                    <p>Please make sure all condition files are in the same directory.</p>
+                </div>
+            `;
+        };
+        document.head.appendChild(script);
+    </script>
+    <script>
+        // Function to shuffle an array
+        function shuffle(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+        
+        // Function to run the experiment
+        function runExperiment(conditionID) {
+            // Initialize jsPsych
+            const jsPsych = initJsPsych({
+                on_finish: function() {
+                    jsPsych.data.displayData();
+                }
+            });
+            
+            // Create timeline
+            const timeline = [];
+            
+            // CONSENT FORM
+            const consent = {
+                type: jsPsychHtmlButtonResponse,
+                stimulus:
+                '<div style="padding: 0 100px;">' +
+                    '<h2>Which audio clip sounds more pleasing?</h2><div style="text-align: left">' +
+                        "<p>Welcome! In this study, you will be asked to listen to some audio clips and tell us which ones sound more pleasing. The session should take about <b>5-10 minutes</b>.</p>" +
+                        "<div class='consent'>" +
+                            "<p>By clicking below, you are agreeing to take part in a study being conducted by cognitive scientists in the <b>Department of Psychology at Stanford University</b>. If you have questions about this research, please contact us at <a href='mailto:cogtoolslab.requester@gmail.com?subject=Image Scoring Study'>cogtoolslab.requester@gmail.com</a>. We will do our best to respond promptly and professionally.</p>" +
+                            "<ul>" +
+                                "<li>You must be at least 18 years old to participate.</li>" +
+                                "<li>Your participation is voluntary.</li>" +
+                                "<li>You may decline to answer any question or stop the study at any time without penalty.</li>" +
+                                "<li>Your responses are anonymous and will be analyzed only in aggregate form.</li>" +
+                                "</ul>" +
+                                "</div></div>" +
+                                "<p>Do you consent to participate in this study as described above?</p>" +
+                                '</div>',
+                                choices: ["Yes, I agree to participate"],
+                                margin_vertical: "30px",
+                                //make fullscreen on finish
+                            };
+                            timeline.push(consent);
+                            enterFullscreen = {
+                                type: jsPsychFullscreen,
+                                fullscreen_mode: true,
+                                message: '<p>The experiment will switch to fullscreen mode when you press the button below.</p><p>Press the button to begin.</p>',
+                            };
+                            timeline.push(enterFullscreen);
+                            
+                            
+                            
+                            const instructions =  {
+                                intro1: '<div style="padding: 0 100px;"><p>In this study, you will be asked to listen to several pairs of short audio clips. After listening to both clips, you will be asked to indicate which of the two sounds you found more <b>pleasing</b> to listen to.</p></div>',
+                                intro2: '<div style="padding: 0 100px;"><p>On each trial, you will first have to listen to both sounds using the "Play" buttons and then indicate which of the two sounds you found more pleasing by clicking the appropriate "Choose Sound" button. You can listen to each sound as many times as you need. Once you are ready to move on to the next pair of sounds, press the "Next" button. </p> <img src = "rating-example.png" style="max-width: 30%; border: 2px solid black;"></img> \
+                                    <p>Once you are ready. Press "Continue" to begind the experiment.</p></div>'
+                                    }
+                                    
+                                    const intro1 = {
+                                        type: jsPsychHtmlButtonResponse,
+                                        stimulus: instructions.intro1,
+                                        choices: ['Continue'],
+                                    };
+                                    
+                                    const intro2 = {
+                                        type: jsPsychHtmlButtonResponse,
+                                        stimulus: instructions.intro2,
+                                        choices: ['Continue'],
+                                    };
+                                    
+                                    timeline.push(intro1);
+                                    timeline.push(intro2);
+                                    
+                                    
+                                
+                            
+                                    
+                                    
+                                    // Shuffle the trials
+                                    const shuffledTrials = shuffle(trialsData);
+                                    
+                                    // Create jsPsych trials
+                                    shuffledTrials.forEach((trialData, presentationOrder) => {
+                                        // Counterbalance: randomly assign which audio is A and which is B
+                                        const aIsMusical = Math.random() < 0.5;
+                                        
+                                        const audioA = aIsMusical ? trialData.audio1 : trialData.audio2;
+                                        const audioB = aIsMusical ? trialData.audio2 : trialData.audio1;
+                                        const labelA = aIsMusical ? 'Musical' : 'Referential';
+                                        const labelB = aIsMusical ? 'Referential' : 'Musical';
+                                        
+                                        // Determine which file is which type
+                                        const file1IsMusical = trialData.file1_name.includes('musical');
+                                        const file2IsMusical = trialData.file2_name.includes('musical');
+                                        
+                                        const trial = {
+                                            type: jsPsychAudioPreference,
+                                            audio_a: audioA,
+                                            audio_b: audioB,
+                                            label_a: 'Sound A',
+                                            label_b: 'Sound B',
+                                            prompt: 'Which sound is more pleasing?',
+                                            data: {
+                                                conditionID: conditionID,
+                                                presentation_order: presentationOrder,
+                                                file1_name: trialData.file1_name,
+                                                file2_name: trialData.file2_name,
+                                                file1_trial_index: trialData.file1_trial_index,
+                                                file2_trial_index: trialData.file2_trial_index,
+                                                a_is_musical: aIsMusical,
+                                                a_file: aIsMusical ? trialData.file1_name : trialData.file2_name,
+                                                b_file: aIsMusical ? trialData.file2_name : trialData.file1_name,
+                                                start_state: trialData.start_state,
+                                                end_state: trialData.end_state
+                                            },
+                                            post_trial_gap: 1000,
+                                            on_finish: function(data) {
+                                                // Determine which type was selected
+                                                if (data.selected_choice === 'A') {
+                                                    data.selected_type = data.a_is_musical ? 'musical' : 'referential';
+                                                } else {
+                                                    data.selected_type = data.a_is_musical ? 'referential' : 'musical';
+                                                }
+                                            }
+                                        };
+                                        timeline.push(trial);
+                                    });
+                                    
+                                    // Thank you screen
+                                    const thankyou = {
+                                        type: jsPsychHtmlKeyboardResponse,
+                                        stimulus: `
+                    <h1>Thank you!</h1>
+                    <p>The experiment is complete.</p>
+                    <p>Press any key to see your data.</p>
+                `
+                                    };
+                                    timeline.push(thankyou);
+                                    
+                                    // Run the experiment
+                                    jsPsych.run(timeline);
+                                }
+                            </script>
+                        </body>
+                        </html>
