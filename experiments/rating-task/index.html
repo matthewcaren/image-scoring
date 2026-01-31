@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Audio Preference Experiment</title>
+    <title>Which sounds do you prefer?</title>
     <script src="https://unpkg.com/jspsych@7.3.4"></script>
     <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3"></script>
     <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.3"></script>
@@ -21,9 +21,6 @@
             'condition_3_trials.json',
             'condition_4_trials.json'
         ];
-        
-        // Get condition ID (0-3 for 4 conditions)
-        conditionID = 0;
 
         // Extract URL parameters
         var urlParams = new URLSearchParams(window.location.search);
@@ -35,11 +32,13 @@
             console.error('Error obtaining prolific URL parameters:', error);
         }
 
-        // Get participant_id from URL params
+        // Get condition_ID (0-3 for 4 conditions) from URL params
         let conditionID = urlParams.get('condition_id');
         conditionID = parseInt(conditionID);
         if (conditionID === null) {
             console.error('No condition ID provided in URL params.');
+        } else if (isNaN(conditionID) || conditionID < 0 || conditionID >= conditionFiles.length) {
+            console.error('Invalid condition ID provided:', conditionID);
         }
         
         
