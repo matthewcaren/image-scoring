@@ -23,6 +23,8 @@
             'condition_4_trials.json'
         ];
 
+        let socket = io.connect();
+
         // Extract URL parameters
         var urlParams = new URLSearchParams(window.location.search);
         try {
