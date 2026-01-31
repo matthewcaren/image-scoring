@@ -77,10 +77,43 @@
         
         // Function to run the experiment
         function runExperiment(conditionID) {
+            gs.session_info.send_data = function (data) {
+                console.log("sending data to server...");
+                json = _.extend({},
+                    { study_metadata: gs.study_metadata },
+                    { session_info: _.omit(gs.session_info, 'on_finish', 'stimuli') },
+                    { prolific: gs.prolific_info },
+                    data);
+                socket.emit('currentData', json,
+                    gs.study_metadata.project, //dbname
+                    gs.study_metadata.experiment, //colname
+                    gs.session_info.gameID,
+                );
+                console.log(gs.study_metadata.project, gs.study_metadata.experiment, gs.session_info.gameID);
+                console.log("data sent.");
+            }
+
             // Initialize jsPsych
             const jsPsych = initJsPsych({
-                on_finish: function() {
-                    jsPsych.data.displayData();
+                on_finish: function (data) {
+                    console.log("Experiment complete. Preparing to send data...");
+                    console.log(data);
+                    gs.session_info.send_data(data);
+
+                    // Exit fullscreen
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
+
+                    // Redirect to Prolific
+                    window.onbeforeunload = null;
+                    window.open("https://app.prolific.com/submissions/complete?cc=CLF8SUI4", "_self");
                 }
             });
             
@@ -92,123 +125,136 @@
                 type: jsPsychHtmlButtonResponse,
                 stimulus:
                 '<div style="padding: 0 100px;">' +
-                    '<h2>Which audio clip sounds more pleasing?</h2><div style="text-align: left">' +
-                        "<p>Welcome! In this study, you will be asked to listen to some audio clips and tell us which ones sound more pleasing. The session should take about <b>5-10 minutes</b>.</p>" +
-                        "<div class='consent'>" +
-                            "<p>By clicking below, you are agreeing to take part in a study being conducted by cognitive scientists in the <b>Department of Psychology at Stanford University</b>. If you have questions about this research, please contact us at <a href='mailto:cogtoolslab.requester@gmail.com?subject=Image Scoring Study'>cogtoolslab.requester@gmail.com</a>. We will do our best to respond promptly and professionally.</p>" +
-                            "<ul>" +
-                                "<li>You must be at least 18 years old to participate.</li>" +
-                                "<li>Your participation is voluntary.</li>" +
-                                "<li>You may decline to answer any question or stop the study at any time without penalty.</li>" +
-                                "<li>Your responses are anonymous and will be analyzed only in aggregate form.</li>" +
-                                "</ul>" +
-                                "</div></div>" +
-                                "<p>Do you consent to participate in this study as described above?</p>" +
-                                '</div>',
-                                choices: ["Yes, I agree to participate"],
-                                margin_vertical: "30px",
-                                //make fullscreen on finish
-                            };
-                            timeline.push(consent);
-                            enterFullscreen = {
-                                type: jsPsychFullscreen,
-                                fullscreen_mode: true,
-                                message: '<p>The experiment will switch to fullscreen mode when you press the button below.</p><p>Press the button to begin.</p>',
-                            };
-                            timeline.push(enterFullscreen);
-                            
-                            
-                            
-                            const instructions =  {
-                                intro1: '<div style="padding: 0 100px;"><p>In this study, you will be asked to listen to several pairs of short audio clips. After listening to both clips, you will be asked to indicate which of the two sounds you found more <b>pleasing</b> to listen to.</p></div>',
-                                intro2: '<div style="padding: 0 100px;"><p>On each trial, you will first have to listen to both sounds using the "Play" buttons and then indicate which of the two sounds you found more pleasing by clicking the appropriate "Choose Sound" button. You can listen to each sound as many times as you need. Once you are ready to move on to the next pair of sounds, press the "Next" button. </p> <img src = "rating-example.png" style="max-width: 30%; border: 2px solid black;"></img> \
-                                    <p>Once you are ready. Press "Continue" to begind the experiment.</p></div>'
-                                    }
-                                    
-                                    const intro1 = {
-                                        type: jsPsychHtmlButtonResponse,
-                                        stimulus: instructions.intro1,
-                                        choices: ['Continue'],
-                                    };
-                                    
-                                    const intro2 = {
-                                        type: jsPsychHtmlButtonResponse,
-                                        stimulus: instructions.intro2,
-                                        choices: ['Continue'],
-                                    };
-                                    
-                                    timeline.push(intro1);
-                                    timeline.push(intro2);
-                                    
-                                    
-                                
-                            
-                                    
-                                    
-                                    // Shuffle the trials
-                                    const shuffledTrials = shuffle(trialsData);
-                                    
-                                    // Create jsPsych trials
-                                    shuffledTrials.forEach((trialData, presentationOrder) => {
-                                        // Counterbalance: randomly assign which audio is A and which is B
-                                        const aIsMusical = Math.random() < 0.5;
-                                        
-                                        const audioA = aIsMusical ? trialData.audio1 : trialData.audio2;
-                                        const audioB = aIsMusical ? trialData.audio2 : trialData.audio1;
-                                        const labelA = aIsMusical ? 'Musical' : 'Referential';
-                                        const labelB = aIsMusical ? 'Referential' : 'Musical';
-                                        
-                                        // Determine which file is which type
-                                        const file1IsMusical = trialData.file1_name.includes('musical');
-                                        const file2IsMusical = trialData.file2_name.includes('musical');
-                                        
-                                        const trial = {
-                                            type: jsPsychAudioPreference,
-                                            audio_a: audioA,
-                                            audio_b: audioB,
-                                            label_a: 'Sound A',
-                                            label_b: 'Sound B',
-                                            prompt: 'Which sound is more pleasing?',
-                                            data: {
-                                                conditionID: conditionID,
-                                                presentation_order: presentationOrder,
-                                                file1_name: trialData.file1_name,
-                                                file2_name: trialData.file2_name,
-                                                file1_trial_index: trialData.file1_trial_index,
-                                                file2_trial_index: trialData.file2_trial_index,
-                                                a_is_musical: aIsMusical,
-                                                a_file: aIsMusical ? trialData.file1_name : trialData.file2_name,
-                                                b_file: aIsMusical ? trialData.file2_name : trialData.file1_name,
-                                                start_state: trialData.start_state,
-                                                end_state: trialData.end_state
-                                            },
-                                            post_trial_gap: 1000,
-                                            on_finish: function(data) {
-                                                // Determine which type was selected
-                                                if (data.selected_choice === 'A') {
-                                                    data.selected_type = data.a_is_musical ? 'musical' : 'referential';
-                                                } else {
-                                                    data.selected_type = data.a_is_musical ? 'referential' : 'musical';
-                                                }
-                                            }
-                                        };
-                                        timeline.push(trial);
-                                    });
-                                    
-                                    // Thank you screen
-                                    const thankyou = {
-                                        type: jsPsychHtmlKeyboardResponse,
-                                        stimulus: `
-                    <h1>Thank you!</h1>
-                    <p>The experiment is complete.</p>
-                    <p>Press any key to see your data.</p>
-                `
-                                    };
-                                    timeline.push(thankyou);
-                                    
-                                    // Run the experiment
-                                    jsPsych.run(timeline);
-                                }
-                            </script>
-                        </body>
-                        </html>
+                '<h2>Which audio clip sounds more pleasing?</h2><div style="text-align: left">' +
+                "<p>Welcome! In this study, you will be asked to listen to some audio clips and tell us which ones sound more pleasing. The session should take about <b>5-10 minutes</b>.</p>" +
+                "<div class='consent'>" +
+                "<p>By clicking below, you are agreeing to take part in a study being conducted by cognitive scientists in the <b>Department of Psychology at Stanford University</b>. If you have questions about this research, please contact us at <a href='mailto:cogtoolslab.requester@gmail.com?subject=Image Scoring Study'>cogtoolslab.requester@gmail.com</a>. We will do our best to respond promptly and professionally.</p>" +
+                "<ul>" +
+                "<li>You must be at least 18 years old to participate.</li>" +
+                "<li>Your participation is voluntary.</li>" +
+                "<li>You may decline to answer any question or stop the study at any time without penalty.</li>" +
+                "<li>Your responses are anonymous and will be analyzed only in aggregate form.</li>" +
+                "</ul>" +
+                "</div></div>" +
+                "<p>Do you consent to participate in this study as described above?</p>" +
+                '</div>',
+                choices: ["Yes, I agree to participate"],
+                margin_vertical: "30px",
+                //make fullscreen on finish
+            };
+            timeline.push(consent);
+            enterFullscreen = {
+                type: jsPsychFullscreen,
+                fullscreen_mode: true,
+                message: '<p>The experiment will switch to fullscreen mode when you press the button below.</p><p>Press the button to begin.</p>',
+            };
+            timeline.push(enterFullscreen);
+
+            const audioCheck = {
+                type: jsPsychHtmlButtonResponse,
+                stimulus: '<div style="padding: 0 100px;"><p>Make sure your sound is on and volume is up! To confirm, listen to this clip and click the word you hear.</p><audio src="delay-spoken.wav" controls style="margin-bottom:10px;"></audio></div>',
+                choices: ['explain', 'orange', 'support', 'delay', 'table', 'guitar'],
+                data: { study_phase: "audio_check" },
+                on_load: function () {
+                    const buttons = document.querySelectorAll('.jspsych-btn');
+                    buttons.forEach(btn => btn.disabled = true);
+                    setTimeout(function () {
+                        buttons.forEach(btn => btn.disabled = false);
+                    }, 3000);
+                }
+            };
+            const audioCheckLoop = {
+                timeline: [audioCheck],
+                loop_function: function (data) {
+                    return data.values()[0].response !== 3; // Keep looping until they select 'delay' (index 3)
+                }
+            };
+            timeline.push(audioCheckLoop);
+            
+            
+            const instructions =  {
+                intro1: '<div style="padding: 0 100px;"><p>In this study, you will listen to several pairs of short sounds. After hearing each pair of sounds, choose which one you found more <b>pleasing</b> to listen to.</p></div>',
+                intro2: '<div style="padding: 0 100px;"><p>For each trial, you will first have to listen to both sounds using the "Play" buttons and then indicate which sound you found more pleasing. You can listen the sounds as many times as you need.</p> <img src = "rating-example.png" style="max-width: 30%; border: 2px solid black;"></img></div>'
+            }
+            
+            const intro1 = {
+                type: jsPsychHtmlButtonResponse,
+                stimulus: instructions.intro1,
+                choices: ['Continue'],
+            };
+            
+            const intro2 = {
+                type: jsPsychHtmlButtonResponse,
+                stimulus: instructions.intro2,
+                choices: ['Continue'],
+            };
+            
+            timeline.push(intro1);
+            timeline.push(intro2);
+            
+
+            // Shuffle the trials
+            const shuffledTrials = shuffle(trialsData);
+            
+            // Create jsPsych trials
+            shuffledTrials.forEach((trialData, presentationOrder) => {
+                // Counterbalance: randomly assign which audio is A and which is B
+                const aIsMusical = Math.random() < 0.5;
+                
+                const audioA = aIsMusical ? trialData.audio1 : trialData.audio2;
+                const audioB = aIsMusical ? trialData.audio2 : trialData.audio1;
+                const labelA = aIsMusical ? 'Musical' : 'Referential';
+                const labelB = aIsMusical ? 'Referential' : 'Musical';
+                
+                // Determine which file is which type
+                const file1IsMusical = trialData.file1_name.includes('musical');
+                const file2IsMusical = trialData.file2_name.includes('musical');
+                
+                const trial = {
+                    type: jsPsychAudioPreference,
+                    audio_a: audioA,
+                    audio_b: audioB,
+                    label_a: 'Sound A',
+                    label_b: 'Sound B',
+                    prompt: 'Which sound is more pleasing?',
+                    data: {
+                        conditionID: conditionID,
+                        presentation_order: presentationOrder,
+                        file1_name: trialData.file1_name,
+                        file2_name: trialData.file2_name,
+                        file1_trial_index: trialData.file1_trial_index,
+                        file2_trial_index: trialData.file2_trial_index,
+                        a_is_musical: aIsMusical,
+                        a_file: aIsMusical ? trialData.file1_name : trialData.file2_name,
+                        b_file: aIsMusical ? trialData.file2_name : trialData.file1_name,
+                        start_state: trialData.start_state,
+                        end_state: trialData.end_state
+                    },
+                    post_trial_gap: 1000,
+                    on_finish: function(data) {
+                        // Determine which type was selected
+                        if (data.selected_choice === 'A') {
+                            data.selected_type = data.a_is_musical ? 'musical' : 'referential';
+                        } else {
+                            data.selected_type = data.a_is_musical ? 'referential' : 'musical';
+                        }
+                        gs.session_info.send_data(data);
+                    }
+                };
+                timeline.push(trial);
+            });
+            
+            // Thank you screen
+            const thankyou = {
+                type: jsPsychHtmlButtonResponse,
+                stimulus: '<div style="padding: 0 100px;"><p>Thank you! You\'ve reached the end. In a moment, click <i>Finish</i> to return to Prolific.</p></div>',
+                choices: ['Finish'],
+            };
+            timeline.push(thankyou);
+            
+            // Run the experiment
+            jsPsych.run(timeline);
+        }
+    </script>
+</body>
+</html>
