@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Which sounds do you prefer?</title>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script src="https://unpkg.com/jspsych@7.3.4"></script>
     <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3"></script>
     <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.3"></script>
@@ -172,8 +173,8 @@
             
             
             const instructions =  {
-                intro1: '<div style="padding: 0 100px;"><p>In this study, you will listen to several pairs of short sounds. After hearing each pair of sounds, choose which one you found more <b>pleasing</b> to listen to.</p></div>',
-                intro2: '<div style="padding: 0 100px;"><p>For each trial, you will first have to listen to both sounds using the "Play" buttons and then indicate which sound you found more pleasing. You can listen the sounds as many times as you need.</p> <img src = "rating-example.png" style="max-width: 30%; border: 2px solid black;"></img></div>'
+                intro1: '<div style="padding: 0 100px;"><p>In this study, you will listen to several pairs of sounds. After hearing each pair of sounds, indicate the one you found more <b>pleasing</b> to listen to.</p></div>',
+                intro2: '<div style="padding: 0 100px;"><p>In each trial, you\'ll have to listen to both sounds before indicating which you found more pleasing. You can listen to the sounds as many times as you need.</p> <img src = "rating-example.png" style="max-width: 30%; border: 2px solid black;"></img></div>'
             }
             
             const intro1 = {
