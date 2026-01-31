@@ -8,21 +8,39 @@
     <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.3"></script>
     <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
     <script src="https://unpkg.com/@jspsych/plugin-fullscreen@1.2"></script>
+    <script src="js/utils/lodash.js"></script>
+    <script src="js/game_settings.js"></script>
     <script src="jspsych-audio-preference.js"></script>
 </head>
 <body>
     <script>
         // List of condition files
         const conditionFiles = [
-        'condition_1_trials.json',
-        'condition_2_trials.json',
-        'condition_3_trials.json',
-        'condition_4_trials.json'
+            'condition_1_trials.json',
+            'condition_2_trials.json',
+            'condition_3_trials.json',
+            'condition_4_trials.json'
         ];
         
         // Get condition ID (0-3 for 4 conditions)
-        
         conditionID = 0;
+
+        // Extract URL parameters
+        var urlParams = new URLSearchParams(window.location.search);
+        try {
+            gs.prolific_info.prolificID = urlParams.get('PROLIFIC_PID');
+            gs.prolific_info.prolificStudyID = urlParams.get('STUDY_ID');
+            gs.prolific_info.prolificSessionID = urlParams.get('SESSION_ID');
+        } catch (error) {
+            console.error('Error obtaining prolific URL parameters:', error);
+        }
+
+        // Get participant_id from URL params
+        let conditionID = urlParams.get('condition_id');
+        conditionID = parseInt(conditionID);
+        if (conditionID === null) {
+            console.error('No condition ID provided in URL params.');
+        }
         
         
         // Select the appropriate condition file
